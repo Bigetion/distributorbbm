@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import auth from './../../utils/auth'
+import auth from "./../../utils/auth";
 export default {
   data() {
     return {
@@ -63,35 +63,39 @@ export default {
   },
   methods: {
     submit() {
-      this.$validator.validateAll();
-      this.message = {
-        success: "",
-        error: ""
-      };
-      if (!this.errors.any()) {
-        this.$http
-          .post("app/changePassword", {
-            passwordOld: this.input.passwordOld,
-            passwordNew: this.input.passwordNew
-          })
-          .then(response => {
-            if (response.data.success_message) {
-              this.input = {
-                passwordOld: "",
-                passwordNew: "",
-                passwordNewConfirm: ""
-              };
-              this.$validator.reset();
-              this.errors.clear();
-              this.message.success = "Password successfully changed";
-            } else {
-              this.message.error = "The password that you entered is not valid";
-            }
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
-      }
+      this.$validator.validateAll().then(() => {
+        this.message = {
+          success: "",
+          error: ""
+        };
+        if (!this.errors.any()) {
+          this.$http
+            .post("app/changePassword", {
+              passwordOld: this.input.passwordOld,
+              passwordNew: this.input.passwordNew
+            })
+            .then(response => {
+              if (response.data.success_message) {
+                this.input = {
+                  passwordOld: "",
+                  passwordNew: "",
+                  passwordNewConfirm: ""
+                };
+                this.$validator.reset();
+                this.errors.clear();
+                this.message.success = "Password successfully changed";
+              } else {
+                this.message.error =
+                  "The password that you entered is not valid";
+              }
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+        } else {
+          $(`[name="${this.errors.items[0].field}"]`).focus();
+        }
+      });
     }
   }
 };

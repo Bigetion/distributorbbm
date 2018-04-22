@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import auth from './../../utils/auth'
-import loginImg from './../../assets/logo_master.png'
+import auth from "./../../utils/auth";
+import loginImg from "./../../assets/logo_master.png";
 export default {
   data() {
     return {
@@ -42,31 +42,34 @@ export default {
   computed: {},
   methods: {
     cancel() {
-      this.$router.push('/')
+      this.$router.push("/");
     },
     submit() {
-      this.$validator.validateAll();
-      this.message.error = "";
-      if (!this.errors.any()) {
-        this.$http
-          .post("login", {
-            username: this.input.username,
-            password: this.input.password
-          })
-          .then(response => {
-            if (response.data.success_message) {
-              localStorage.setItem("token", response.data.jwt);
-              auth.user.authenticated = true;
-              window.location.reload();
-              this.$router.push("/");
-            } else {
-              this.message.error = "Invalid username and password";
-            }
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
-      }
+      this.$validator.validateAll().then(() => {
+        this.message.error = "";
+        if (!this.errors.any()) {
+          this.$http
+            .post("login", {
+              username: this.input.username,
+              password: this.input.password
+            })
+            .then(response => {
+              if (response.data.success_message) {
+                localStorage.setItem("token", response.data.jwt);
+                auth.user.authenticated = true;
+                window.location.reload();
+                this.$router.push("/");
+              } else {
+                this.message.error = "Invalid username and password";
+              }
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+        } else {
+          $(`[name="${this.errors.items[0].field}"]`).focus();
+        }
+      });
     }
   }
 };

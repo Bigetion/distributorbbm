@@ -36,7 +36,7 @@
                 class="preview-container"
               ></picture-input>
               <div class="preview-container" v-if="!state.isEdit">
-                <img v-if="state.isViewImage" class="picture-preview" src="http://localhost/distributorbbmapi/image/get/lambang" width="250" height="250">
+                <img v-if="state.isViewImage" class="picture-preview" :src="lambangURL" width="250" height="250">
               </div>
             </div>
           </v-flex>
@@ -58,6 +58,7 @@
 <script>
 export default {
   data: () => ({
+    lambangURL: process.env.API_URL + "image/get/lambang",
     state: {
       isEdit: false,
       isRefresh: false,
@@ -102,10 +103,12 @@ export default {
     },
     updateLambang() {
       this.$http.post("base/upload/image", {
-        images: [{
-          base64: this.input.lambang,
-          name: "lambang"
-        }]
+        images: [
+          {
+            base64: this.input.lambang,
+            name: "lambang"
+          }
+        ]
       });
     },
     setIsEdit(condition) {
@@ -118,25 +121,34 @@ export default {
       }
     },
     submit() {
-      this.$validator.validateAll();
-      if (!this.errors.any()) {
-        if(this.input.namaPT != this.settingInput.namaPT) this.updateDefaultData('nama_pt', this.input.namaPT);
-        if(this.input.NPWP != this.settingInput.NPWP) this.updateDefaultData('npwp', this.input.NPWP);
-        if(this.input.noSuratJalan != this.settingInput.noSuratJalan) this.updateDefaultData('nomor_surat_jalan', this.input.noSuratJalan);
-        if(this.input.alamat != this.settingInput.alamat) this.updateDefaultData('alamat', this.input.alamat);
-        if(this.input.namaAlias != this.settingInput.namaAlias) this.updateDefaultData('nama_alias', this.input.namaAlias);
-        this.state.isEdit = false;
+      this.$validator.validateAll().then(() => {
+        if (!this.errors.any()) {
+          if (this.input.namaPT != this.settingInput.namaPT)
+            this.updateDefaultData("nama_pt", this.input.namaPT);
+          if (this.input.NPWP != this.settingInput.NPWP)
+            this.updateDefaultData("npwp", this.input.NPWP);
+          if (this.input.noSuratJalan != this.settingInput.noSuratJalan)
+            this.updateDefaultData(
+              "nomor_surat_jalan",
+              this.input.noSuratJalan
+            );
+          if (this.input.alamat != this.settingInput.alamat)
+            this.updateDefaultData("alamat", this.input.alamat);
+          if (this.input.namaAlias != this.settingInput.namaAlias)
+            this.updateDefaultData("nama_alias", this.input.namaAlias);
+          this.state.isEdit = false;
 
-        if(this.input.lambang!=""){
-          this.updateLambang();
-          this.state.isViewImage = false;
-          setTimeout(()=>{
-            this.state.isViewImage = true;
-          },200)
+          if (this.input.lambang != "") {
+            this.updateLambang();
+            this.state.isViewImage = false;
+            setTimeout(() => {
+              this.state.isViewImage = true;
+            }, 200);
+          }
+        } else {
+          $(`[name="${this.errors.items[0].field}"]`).focus();
         }
-      } else {
-        $(`[name="${this.errors.items[0].field}"]`).focus();
-      }
+      });
     }
   },
   computed: {
@@ -224,14 +236,14 @@ export default {
 </script>
 
 <style lang="css">
-  .picture-preview-label {
-    font-size: 12px !important;
-  }
-  .preview-container {
-    margin: 3px 0 0 0 !important;
-  }
-  .preview-container .picture-preview {
-    z-index: 1 !important;
-    border: 4px solid slategrey !important;
-  }
+.picture-preview-label {
+  font-size: 12px !important;
+}
+.preview-container {
+  margin: 3px 0 0 0 !important;
+}
+.preview-container .picture-preview {
+  z-index: 1 !important;
+  border: 4px solid slategrey !important;
+}
 </style>
