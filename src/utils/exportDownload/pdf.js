@@ -1,11 +1,14 @@
+import lodash from "lodash";
+import moment from "moment";
+
 let pdf = {};
 
 function resolveFormGroup(columns) {
   let cols = [];
 
-  angular.forEach(columns, function (col) {
+  columns.forEach(function (col) {
     let children = [];
-    angular.forEach(col, function (child) {
+    col.forEach(function (child) {
       if (child ? !child.hidden : false) {
         if (child.formGroups) {
           let resFormGroup = resolveFormGroup(child.formGroups);
@@ -31,9 +34,6 @@ function resolveFormGroup(columns) {
             };
           } else {
             let text = child.value;
-            if (child.type == 'currency') {
-              text = Currency.format(child.value || '');
-            }
             content = {
               text: text || '',
               width: child.valueWidth || '*',
@@ -60,12 +60,12 @@ function resolveFormGroup(columns) {
 
 function resolveColumn(columns) {
   let cols = [];
-  angular.forEach(columns, function (col) {
+  columns.forEach(function (col) {
     let children = [];
     let childrenContent = [];
     let totalWidth = 0;
     let colState = 0;
-    angular.forEach(col, function (child) {
+    col.forEach(function (child) {
       let content = {};
       let colWidth = '100%';
       let alignment = 'left';
@@ -126,7 +126,7 @@ function resolveColumn(columns) {
         });
       } else {
         let i = 0;
-        angular.forEach(colClassSplit, function (item) {
+        colClassSplit.forEach(function (item) {
           colClassSplit[i] = item.trim();
           i++;
         });
@@ -134,7 +134,7 @@ function resolveColumn(columns) {
         if (child.align) {
           alignment = child.align;
         }
-        if (angular.isDefined(child.checkbox)) {
+        if (child.checkbox) {
           content = {
             image: child.checkbox ? 'check' : 'uncheck',
             fit: [child.size || 8, child.size || 8],
@@ -156,13 +156,28 @@ function resolveColumn(columns) {
             width: '100%'
           });
         }
-        else if (angular.isDefined(child.text)) {
+        else if (child.text) {
           content = {
             text: child.text || '',
             width: colWidth,
             alignment: alignment,
             style: colClassSplit
           };
+        }
+        else if (child.canvas) {
+          content = {
+            canvas: child.canvas
+          }
+        }
+        else if (child.cTable) {
+          content = {
+            table: child.cTable
+          }
+          if (child.cTableLayout) {
+            content = Object.assign(content, {
+              layout: child.cTableLayout
+            })
+          }
         }
 
         childrenContent.push(content);
@@ -212,7 +227,7 @@ function resolvePanel(panel) {
 
 function resolveContent(content) {
   let result = [];
-  angular.forEach(content, function (val) {
+  content.forEach(function (val) {
     result.push(resolveChildContent(val));
   });
 
@@ -237,10 +252,10 @@ function resolveTable(table) {
     // resolve header
     if (autoNumber == -1) {
       fields.push({
-        text: $rootScope.lang.number_short,
+        text: 'No.',
         style: 'tableHeader'
       });
-      widths.push(15);
+      widths.push("auto");
     }
   }
 
@@ -249,13 +264,13 @@ function resolveTable(table) {
     let title = [];
 
     title.push({
-      text: $rootScope.lang[table.title] || table.title || '',
+      text: table.title || '',
       colSpan: table.fields.length + (table.showNumber && autoNumber > -1 ? 1 : 0),
       style: 'tableHeader'
     });
 
-    angular.forEach(_.range(table.fields.length - 1), function () {
-      title.push({text: ''});
+    lodash.range(table.fields.length - 1).forEach(function () {
+      title.push({ text: '' });
     });
 
     body.push(title);
@@ -263,40 +278,40 @@ function resolveTable(table) {
 
   // resolve subtitle
   if (table.subTitles) {
-    angular.forEach(table.subTitles, function (subTitle) {
+    table.subTitles.forEach(function (subTitle) {
       let subTitles = [];
       subTitles.push({
-        text: $rootScope.lang[subTitle] || subTitle || '',
+        text: subTitle || '',
         colSpan: table.fields.length + (table.showNumber && autoNumber > -1 ? 1 : 0),
         style: 'tableHeader'
       });
 
-      angular.forEach(_.range(table.fields.length - 1), function () {
-        subTitles.push({text: ''});
+      lodash.range(table.fields.length - 1).forEach(function () {
+        subTitles.push({ text: '' });
       });
 
       body.push(subTitles);
     });
   }
 
-  angular.forEach(table.fields, function (field) {
+  table.fields.forEach(function (field) {
     fields.push({
-      text: $rootScope.lang[field.title] || field.title || 'Undefined',
+      text: field.title || 'Undefined',
       style: 'tableHeader'
     });
 
     if (field.id == 'no') {
-      widths.push(15);
+      widths.push("auto");
     }
     else {
-      widths.push(_.isNumber(field.width || field.widthExport) ? (field.width || field.widthExport) : '*');
+      widths.push(lodash.isNumber(field.width || field.widthExport) ? (field.width || field.widthExport) : '*');
     }
   });
 
   body.push(fields);
 
   // resolve row
-  angular.forEach(table.data, function (row, key) {
+  table.data.forEach(function (row, key) {
     let data = [];
     if (table.showNumber && autoNumber == -1) {
       data.push({
@@ -305,7 +320,7 @@ function resolveTable(table) {
       });
     }
 
-    angular.forEach(table.fields, function (field) {
+    table.fields.forEach(function (field) {
       let text = '';
       let image = '';
       let value;
@@ -316,10 +331,8 @@ function resolveTable(table) {
         value = row[field.id];
       }
 
-      if (field.type == 'currency') {
-        text = Currency.format((value || '').toString());
-      } else if (field.type == 'date') {
-        text = $filter('date')(value, 'medium');
+      if (field.type == 'date') {
+        text = moment(value).format("DD, MMMM YYYY");
       } else if (field.type == 'checkbox') {
         image = value == 'Y' ? 'check' : 'uncheck';
       } else if (field.type == 'native') {
@@ -329,8 +342,8 @@ function resolveTable(table) {
         text = (value) == null ? field.default : (value);
       }
       else {
-        if (angular.isArray(field.id)) {
-          angular.forEach(field.id, function (val, key) {
+        if (Array.isArray(field.id)) {
+          field.id.forEach(function (val, key) {
             if (key > 0) {
               text += field.concat || ' ';
             }
@@ -361,8 +374,8 @@ function resolveTable(table) {
   });
 
   let isFooterExist = lodash.filter(table.fields, function (f) {
-      return f.footer != undefined;
-    }).length > 0;
+    return f.footer != undefined;
+  }).length > 0;
 
   // resolve footer
   if (isFooterExist) {
@@ -374,9 +387,9 @@ function resolveTable(table) {
       });
     }
 
-    angular.forEach(table.fields, function (field) {
+    table.fields.forEach(function (field) {
       footers.push({
-        text: $rootScope.lang[field.footer] || field.footer || '',
+        text: field.footer || '',
         style: 'tableHeader'
       });
     });
@@ -392,33 +405,15 @@ function resolveTable(table) {
       body: body,
       style: 'table'
     },
-    layout: 'noBorders'
+    layout: table.layout
   };
 }
 
 function resolveChildContent(item) {
   let result = [];
-
-  angular.forEach(item, function (val, key) {
+  for (var key in item) {
+    const val = item[key];
     let resultObj = {};
-
-    if (key.toLowerCase() == 'shownotifmessage') {
-      let resultNotifObj = {
-        style: ['h6', 'mb10']
-      };
-      if ($rootScope.httpResultNotif.successMessage || $rootScope.httpResultNotif.errorMessage) {
-        if ($rootScope.httpResultNotif.successMessage) {
-          resultNotifObj.text = $rootScope.messageResource($rootScope.httpResultNotif.successMessage);
-          resultNotifObj.style.push('success');
-        } else if ($rootScope.httpResultNotif.errorMessage) {
-          resultNotifObj.text = $rootScope.messageResource($rootScope.httpResultNotif.errorMessage);
-          resultNotifObj.style.push('error');
-        }
-
-        result.push(resultNotifObj);
-      }
-    }
-
     if (key.toLowerCase() == 'title') {
       resultObj = {
         text: val || '',
@@ -447,6 +442,11 @@ function resolveChildContent(item) {
       result.push(resultObj);
     } else if (key.toLowerCase() == 'table') {
       result.push(resolveTable(val));
+    } else if (key.toLowerCase() == 'canvas') {
+      result.push({
+        canvas: val,
+        width: '100%'
+      });
     } else if (key.toLowerCase() == 'pagebreak') {
       result.push({
         text: ' ',
@@ -462,8 +462,7 @@ function resolveChildContent(item) {
         width: '100%'
       });
     }
-  });
-
+  }
   return result;
 }
 
@@ -832,19 +831,8 @@ pdf.generateDocDefinition = function (content, filename, orientation, pageSize) 
     },
     pageOrientation: orientation || 'portrait',
     pageSize: pageSize || 'A4',
-    header: {
-      text: $filter('date')(new Date(), 'medium'),
-      style: 'footer',
-      alignment: 'right'
-    },
     content: resolveContent(content),
-    footer: function (currentPage, pageCount) {
-      return {
-        text: $rootScope.lang['page'] + ' ' + currentPage.toString() + ' of ' + pageCount,
-        style: 'footer'
-      };
-    },
-    pageMargins: [20, 35, 20, 40],
+    pageMargins: [20, 20, 20, 20],
     styles: {
       header: {
         fontSize: 16,
@@ -917,6 +905,9 @@ pdf.generateDocDefinition = function (content, filename, orientation, pageSize) 
       },
       span: {
         fontSize: 9
+      },
+      small: {
+        fontSize: 7
       },
       helper: {
         fontSize: 8,
@@ -1047,18 +1038,7 @@ pdf.generateDocDefinitionByElementId = function (id, filename, subTitle, orienta
       title: filename || 'Document'
     },
     pageOrientation: orientation || 'portrait',
-    header: {
-      text: $filter('date')(new Date(), 'medium'),
-      style: 'footer',
-      alignment: 'right'
-    },
     content: [],
-    footer: function (currentPage, pageCount) {
-      return {
-        text: $rootScope.lang.page + ' ' + currentPage.toString() + ' ' + $rootScope.lang.of + ' ' + pageCount,
-        style: 'footer'
-      };
-    },
     pageMargins: [20, 35, 20, 40],
     defaultStyle: {
       columnGap: 5
@@ -1083,4 +1063,4 @@ pdf.generateDocDefinitionByElementId = function (id, filename, subTitle, orienta
   return exportedData;
 };
 
-  export default pdf;
+export default pdf;

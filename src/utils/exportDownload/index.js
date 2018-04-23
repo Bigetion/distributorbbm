@@ -1,12 +1,13 @@
 import Excel from './excel'
+import Pdf from './pdf'
 const FileSaver = require('file-saver')
 
-function excel (content, filename) {
+function excel(content, filename) {
   var wbout = Excel.generateDocDefinition(content, filename);
-  FileSaver.saveAs(new Blob(wbout, {type: "application/octet-stream"}), filename + ".xlsx")
+  FileSaver.saveAs(new Blob(wbout, { type: "application/octet-stream" }), filename + ".xlsx")
 }
 
-function excelByteArray (content, filename) {
+function excelByteArray(content, filename) {
   var wbout = Excel.generateDocDefinition(content, filename);
   var bytes = new Uint8Array(wbout[0]);
   var binary = '';
@@ -18,4 +19,26 @@ function excelByteArray (content, filename) {
   return Converter.base64ToByteArray(base64);
 }
 
-export { excel, excelByteArray }
+function pdf(content, filename, orientation, pageSize) {
+  var docDefinition = Pdf.generateDocDefinition(content, filename, orientation, pageSize);
+  pdfMake.createPdf(docDefinition).download(filename + '.pdf');
+}
+
+function pdfByteArray(content, filename, orientation, pageSize) {
+  var docDefinition = Pdf.generateDocDefinition(content, filename, orientation, pageSize);
+  var deferred = $q.defer();
+
+  pdfMake.createPdf(docDefinition).getBase64(function (encodedString) {
+    deferred.resolve(Converter.base64ToByteArray(encodedString));
+  });
+
+  return deferred.promise;
+}
+
+function print(content, filename, orientation, pageSize) {
+  var docDefinition = Pdf.generateDocDefinition(content, filename, orientation, pageSize);
+  console.log(JSON.stringify(docDefinition.content));
+  pdfMake.createPdf(docDefinition).print();
+}
+
+export { excel, excelByteArray, pdf, pdfByteArray, print }

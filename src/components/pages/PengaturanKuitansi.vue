@@ -49,6 +49,7 @@
       </v-card>
       <v-card flat class="pa-3" v-else>
         <v-btn primary @click="setIsEdit(true)">Edit</v-btn>
+        <v-btn success @click="tesPdf()">Tes Print</v-btn>
       </v-card>
     </v-form>
     <query-service v-model="settings" from-file="settings" :extra-query-options="queryServiceExtraQuery" :is-refresh="state.isRefresh"></query-service>
@@ -56,9 +57,11 @@
 </template>
 
 <script>
+import { print } from "./../../utils/exportDownload";
 export default {
   data: () => ({
     lambangURL: process.env.API_URL + "image/get/lambang",
+    lambangBase64: "",
     state: {
       isEdit: false,
       isRefresh: false,
@@ -76,8 +79,15 @@ export default {
     settingInput: {},
     isLoading: false
   }),
-  created() {},
+  created() {
+    this.getLambang();
+  },
   methods: {
+    getLambang() {
+      this.$http.post("image/getbase64/lambang", {}).then(response => {
+        this.lambangBase64 = response.data.base64;
+      });
+    },
     onChangeLambang(a) {
       this.input.lambang = a;
     },
@@ -143,12 +153,352 @@ export default {
             this.state.isViewImage = false;
             setTimeout(() => {
               this.state.isViewImage = true;
+              this.getLambang();
             }, 200);
           }
         } else {
           $(`[name="${this.errors.items[0].field}"]`).focus();
         }
       });
+    },
+    tesPdf() {
+      var exportedData = [
+        {
+          colGroups: [
+            [
+              {
+                colGroups: [
+                  [
+                    {
+                      image: this.lambangBase64,
+                      imageWidth: 100,
+                      imageHeight: 60
+                    }
+                  ]
+                ],
+                colMd: 2
+              },
+              {
+                colGroups: [
+                  [
+                    {
+                      text: this.input.namaPT,
+                      align: "center",
+                      colClass: "h4"
+                    },
+                    {
+                      text: this.input.alamat,
+                      align: "center"
+                    }
+                  ]
+                ],
+                colMd: 7
+              },
+              {
+                colGroups: [
+                  [
+                    {
+                      text: `NPWP KSE : ${this.input.NPWP}`,
+                      colMd: 12,
+                      colClass: "mt10"
+                    },
+                    {
+                      text: `INU NO : -`,
+                      colMd: 12
+                    }
+                  ]
+                ],
+                colMd: 3
+              },
+              {
+                cTable: {
+                  widths: ["*"],
+                  headerRows: 1,
+                  body: [
+                    [
+                      {
+                        border: [false, true, false, true],
+                        text: "",
+                        fillColor: "#999999"
+                      }
+                    ]
+                  ]
+                }
+              }
+            ],
+            [
+              {
+                colGroups: [
+                  [
+                    {
+                      text: "SURAT JALAN",
+                      align: "center",
+                      colClass: "h5,mt10,mb5"
+                    },
+                    {
+                      text: "DELIVERY ORDER (DO)",
+                      align: "center",
+                      colClass: "mb10"
+                    }
+                  ]
+                ],
+                colMd: 12
+              }
+            ],
+            [
+              {
+                colGroups: [
+                  [
+                    {
+                      formGroups: [
+                        [
+                          {
+                            label: "Nomor Surat Jalan",
+                            value: ": -"
+                          },
+                          {
+                            label: "Tanggal",
+                            value: ": -"
+                          },
+                          {
+                            label: "Kepada Yth./ To",
+                            value: ": -"
+                          },
+                          {
+                            label: " ",
+                            value: " "
+                          },
+                          {
+                            label: "Contact Person",
+                            value: ": -"
+                          }
+                        ]
+                      ]
+                    }
+                  ]
+                ],
+                colMd: 6
+              },
+              {
+                colGroups: [
+                  [
+                    {
+                      formGroups: [
+                        [
+                          {
+                            label: "Nomor Kendaraan",
+                            value: ": -"
+                          },
+                          {
+                            label: "Nomor Segel Atas",
+                            value: ": -"
+                          },
+                          {
+                            label: "Nomor Segel Bawah",
+                            value: ": -"
+                          },
+                          {
+                            label: "Nama Transportasi",
+                            value: ": -"
+                          },
+                          {
+                            label: "Warna Segel",
+                            value: ": -"
+                          }
+                        ]
+                      ]
+                    }
+                  ]
+                ],
+                colMd: 6
+              }
+            ],
+            [
+              {
+                colGroups: [
+                  [
+                    {
+                      table: {
+                        fields: [
+                          {
+                            title: "No.",
+                            id: "no"
+                          },
+                          {
+                            title: "Nama Barang",
+                            id: "nama_barang"
+                          },
+                          {
+                            title: "Kwantitas",
+                            id: "qty"
+                          },
+                          {
+                            title: "SG",
+                            id: "sg"
+                          },
+                          {
+                            title: "Temperatur",
+                            id: "temperatur"
+                          },
+                          {
+                            title: "Cairan",
+                            id: "cairan"
+                          }
+                        ],
+                        data: [
+                          {
+                            no: 1,
+                            nama_barang: "HSD INDUSTRI",
+                            qty: "10.000",
+                            sg: "0,387",
+                            temperatur: "-",
+                            cairan: "-"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                ],
+                colMd: 12,
+                colClass: "mt20"
+              }
+            ],
+            [
+              {
+                colGroups: [
+                  [
+                    {
+                      cTable: {
+                        heights: [50, "*", "*"],
+                        widths: ["*", "*", "*"],
+                        body: [
+                          [
+                            {
+                              border: [true, true, false, false],
+                              text: "",
+                              alignment: "center"
+                            },
+                            {
+                              border: [true, true, false, false],
+                              text: "",
+                              alignment: "center"
+                            },
+                            {
+                              border: [true, true, true, false],
+                              text: "",
+                              alignment: "center"
+                            }
+                          ],
+                          [
+                            {
+                              border: [true, false, false, false],
+                              text: "Yang Menerima",
+                              alignment: "center",
+                              style: "span"
+                            },
+                            {
+                              border: [true, false, false, false],
+                              text: "Mengetahui",
+                              alignment: "center",
+                              style: "span"
+                            },
+                            {
+                              border: [true, false, true, false],
+                              text: "DRIVER",
+                              alignment: "center",
+                              style: "span"
+                            }
+                          ],
+                          [
+                            {
+                              border: [true, false, false, true],
+                              text: "Accepted by",
+                              alignment: "center",
+                              style: "small"
+                            },
+                            {
+                              border: [true, false, false, true],
+                              text: "Alknowledge",
+                              alignment: "center",
+                              style: "small"
+                            },
+                            {
+                              border: [true, false, true, true],
+                              text: "Delivered by",
+                              alignment: "center",
+                              style: "small"
+                            }
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                ],
+                colClass: "mt5"
+              }
+            ],
+            [
+              {
+                colGroups: [
+                  [
+                    {
+                      text: "Perhatian :",
+                      colClass: "small"
+                    },
+                    {
+                      text:
+                        "Sebelum barang diterima dan dibongkar harap BBM HSD diperiksa dengan teliti dan seksama",
+                      colClass: "small"
+                    },
+                    {
+                      text:
+                        "barang yang sudah diterima tidak dapat dikembalikan/dikomplain",
+                      colClass: "small"
+                    },
+                    {
+                      text: "Diterima dalam keadaan cukup dan murni",
+                      colClass: "small"
+                    },
+                    {
+                      text: "Accept",
+                      colClass: "small"
+                    }
+                  ]
+                ],
+                colClass: "mt5"
+              },
+              {
+                colGroups: [
+                  [
+                    {
+                      text: "Keterangan :",
+                      colClass: "small"
+                    },
+                    {
+                      text: "1. Lembar pertama warna putih / asli untuk KSE",
+                      colClass: "small"
+                    },
+                    {
+                      text: "2. Lembar kedua warna merah untuk Customer",
+                      colClass: "small"
+                    },
+                    {
+                      text: "3. Lembar ketiga warna kuning untuk Driver",
+                      colClass: "small"
+                    },
+                    {
+                      text: "4. Lembar keempat warna hijau untuk Pengawas",
+                      colClass: "small"
+                    }
+                  ]
+                ],
+                colClass: "mt10"
+              }
+            ]
+          ]
+        }
+      ];
+      print(exportedData, "tes", "landscape");
     }
   },
   computed: {
