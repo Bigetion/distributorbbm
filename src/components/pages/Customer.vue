@@ -13,7 +13,7 @@
         ></add-edit-customer>
       </div>
       <div v-show="!(state.isAdd || state.isEdit)">
-        <v-card flat class="pa-4">
+        <v-card flat class="pa-3">
           <v-text-field solo label="Search" append-icon="search" class="mb-2" v-model="q"></v-text-field>
           <table-view 
             from-file="customer" 
@@ -24,7 +24,7 @@
           ></table-view>
         </v-card>
         <v-divider></v-divider>
-        <v-card flat class="pa-3">
+        <v-card flat class="pa-2">
           <v-btn success @click="setIsAdd(true)">Tambah</v-btn>
           <v-btn v-if="selectedRow.length==1" primary  @click="setIsEdit(true)">Edit</v-btn>
           <v-btn v-if="selectedRow.length > 0" error @click.stop="state.isDelete = !state.isDelete">Hapus</v-btn>

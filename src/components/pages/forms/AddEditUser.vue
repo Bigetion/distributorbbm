@@ -2,13 +2,23 @@
   <div>
     <v-form v-model="valid" ref="form">
       <v-card flat class="pa-4">
-        <v-text-field label="Username" name="Username" v-model="input.username" :error-messages="errors.collect('Username')" v-validate="'required'"></v-text-field>
-        <select-view placeholder="Role" v-model="input.role" from-file="roles" name="Role" :error-messages="errors.collect('Role')" v-validate="'required'"></select-view>
-        <v-text-field v-if="!isEdit" label="Password" name="Password" v-model="input.password" :error-messages="errors.collect('Password')" type="password" v-validate="!isEdit ? 'required': ''"></v-text-field>
-        <v-text-field v-if="!isEdit" label="Konfirmasi Password" name="Konfirmasi Password" v-model="input.confirmPassword" :error-messages="errors.collect('Konfirmasi Password')" type="password" v-validate="!isEdit ? 'required|confirmed:Password': 'confirmed:Password'"></v-text-field>
+        <v-layout row wrap>
+          <v-flex md12 class="px-2">
+            <v-text-field label="Username" name="Username" v-model="input.username" :error-messages="errors.collect('Username')" v-validate="'required'"></v-text-field>
+          </v-flex>
+          <v-flex md12 class="px-2">
+            <select-view placeholder="Role" v-model="input.role" from-file="roles" name="Role" :error-messages="errors.collect('Role')" v-validate="'required'"></select-view>
+          </v-flex>
+          <v-flex md12 class="px-2">
+            <v-text-field v-if="!isEdit" label="Password" name="Password" v-model="input.password" :error-messages="errors.collect('Password')" type="password" v-validate="!isEdit ? 'required': ''"></v-text-field>
+          </v-flex>
+          <v-flex md12 class="px-2">
+            <v-text-field v-if="!isEdit" label="Konfirmasi Password" name="Konfirmasi Password" v-model="input.confirmPassword" :error-messages="errors.collect('Konfirmasi Password')" type="password" v-validate="!isEdit ? 'required|confirmed:Password': 'confirmed:Password'"></v-text-field>
+          </v-flex>
+        </v-layout>
       </v-card>
       <v-divider></v-divider>
-      <v-card flat class="pa-3">
+      <v-card flat class="pa-4">
         <v-btn success @click="submit()">Simpan</v-btn>
         <v-btn error @click="cancel()">Batal</v-btn>
       </v-card>

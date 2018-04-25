@@ -13,6 +13,9 @@
               <span v-else-if="item.type=='currency'">
                 {{formatCurrency(props.item[item.value])}}
               </span>
+              <span v-else-if="item.type=='enum'">
+                {{item.options.data[props.item[item.value]]}}
+              </span>
               <span v-else>
                 {{ props.item[item.value] }}
               </span>

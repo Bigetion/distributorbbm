@@ -1,30 +1,30 @@
 <template>
   <div>
     <v-form v-model="valid" ref="form">
-      <v-card flat class="pa-3">
+      <v-card flat class="pa-4">
         <v-layout row wrap>
-          <v-flex md6 class="pa-2">
+          <v-flex md6 class="px-2">
             <v-text-field label="Nama Customer" name="Nama Customer" v-model="input.nama" :error-messages="errors.collect('Nama Customer')" v-validate="'required'"></v-text-field>
           </v-flex>
-          <v-flex md6 class="pa-2">
+          <v-flex md6 class="px-2">
             <v-text-field label="No. Telp / HP" name="No. Telp / HP" v-model="input.nomorTelepon" :error-messages="errors.collect('No. Telp / HP')" v-validate="'required'"></v-text-field>
           </v-flex>
-          <v-flex md6 class="pa-2">
+          <v-flex md6 class="px-2">
             <v-text-field label="Bank" name="Bank" v-model="input.bank" :error-messages="errors.collect('Bank')" v-validate="'required'"></v-text-field>
           </v-flex>
-          <v-flex md6 class="pa-2">
+          <v-flex md6 class="px-2">
             <v-text-field label="Nomor Rekening" name="Nomor Rekening" v-model="input.nomorRekening" :error-messages="errors.collect('Nomor Rekening')" v-validate="'required'"></v-text-field>
           </v-flex>
-          <v-flex md12 class="pa-2">
+          <v-flex md12 class="px-2">
             <v-text-field label="Alamat" name="Alamat" v-model="input.alamat" :error-messages="errors.collect('Alamat')" v-validate="'required'"></v-text-field>
           </v-flex>
-          <v-flex md12 class="pa-2">
+          <v-flex md12 class="px-2">
             <v-text-field label="Keterangan" name="Keterangan" v-model="input.keterangan" :error-messages="errors.collect('Keterangan')" v-validate="'required'" multi-line></v-text-field>
           </v-flex>
         </v-layout>
       </v-card>
       <v-divider></v-divider>
-      <v-card flat class="pa-3">
+      <v-card flat class="pa-4">
         <v-btn success @click="submit()">Simpan</v-btn>
         <v-btn error @click="cancel()">Batal</v-btn>
       </v-card>

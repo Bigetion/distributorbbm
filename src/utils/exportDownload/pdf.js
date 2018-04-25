@@ -37,14 +37,15 @@ function resolveFormGroup(columns) {
             content = {
               text: text || '',
               width: child.valueWidth || '*',
-              style: 'value'
+              style: child.style || 'value'
             };
           }
 
           children.push({
             columns: [{
               text: child.label || '-',
-              width: child.labelWidth || 100
+              width: child.labelWidth || 100,
+              style: child.style
             }, content],
             style: 'formGroup'
           });

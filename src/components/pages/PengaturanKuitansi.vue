@@ -3,23 +3,23 @@
     <v-form v-model="valid" ref="form">
       <v-card flat class="pa-3">
         <v-layout row wrap class="detail">
-          <v-flex md6 class="pa-2">
+          <v-flex md6 class="px-2">
             <v-text-field label="Nama PT" name="Nama PT" v-model="input.namaPT" :error-messages="errors.collect('Nama PT')" v-validate="'required'" :disabled="!state.isEdit"></v-text-field>
           </v-flex>
-          <v-flex md6 class="pa-2">
+          <v-flex md6 class="px-2">
             <v-text-field label="NPWP" name="NPWP" v-model="input.NPWP" :error-messages="errors.collect('NPWP')" v-validate="'required'" :disabled="!state.isEdit"></v-text-field>
           </v-flex>
-          <v-flex md6 class="pa-2">
-            <v-text-field label="No. Surat Jalan" name="No. Surat Jalan" v-model="input.noSuratJalan" :error-messages="errors.collect('No. Surat Jalan')" v-validate="'required'" :disabled="!state.isEdit"></v-text-field>
+          <v-flex md6 class="px-2">
+            <v-text-field label="INU" name="INU" v-model="input.inu" :error-messages="errors.collect('INU')" v-validate="'required'" :disabled="!state.isEdit"></v-text-field>
           </v-flex>
-          <v-flex md6 class="pa-2">
+          <v-flex md6 class="px-2">
             <v-text-field label="Alamat" name="Alamat" v-model="input.alamat" :error-messages="errors.collect('Alamat')" v-validate="'required'" :disabled="!state.isEdit"></v-text-field>
           </v-flex>
-          <v-flex md6 class="pa-2">
+          <v-flex md6 class="px-2">
             <v-text-field label="Nama Alias" name="Nama Alias" v-model="input.namaAlias" :error-messages="errors.collect('Nama Alias')" v-validate="'required'" :disabled="!state.isEdit"></v-text-field>
           </v-flex>
           <v-flex md6>
-            <div class="pa-2">
+            <div class="px-2">
               <span class="picture-preview-label">Lambang</span><br>
               <picture-input
                 v-if="state.isEdit"
@@ -70,7 +70,7 @@ export default {
     input: {
       namaPT: "",
       NPWP: "",
-      noSuratJalan: "",
+      inu: "",
       alamat: "",
       namaAlias: "",
       lambang: {}
@@ -137,10 +137,10 @@ export default {
             this.updateDefaultData("nama_pt", this.input.namaPT);
           if (this.input.NPWP != this.settingInput.NPWP)
             this.updateDefaultData("npwp", this.input.NPWP);
-          if (this.input.noSuratJalan != this.settingInput.noSuratJalan)
+          if (this.input.inu != this.settingInput.inu)
             this.updateDefaultData(
-              "nomor_surat_jalan",
-              this.input.noSuratJalan
+              "inu",
+              this.input.inu
             );
           if (this.input.alamat != this.settingInput.alamat)
             this.updateDefaultData("alamat", this.input.alamat);
@@ -162,6 +162,15 @@ export default {
       });
     },
     tesPdf() {
+      var printInput = {
+        lambang: this.lambangBase64,
+        namaPT: this.input.namaPT,
+        alamatPT: this.input.alamat,
+        nomorTeleponPT: "0532-2031746",
+        NPWP: this.input.NPWP,
+        INU: this.input.inu,
+        aliasPT: this.input.namaAlias
+      }
       var exportedData = [
         {
           colGroups: [
@@ -170,45 +179,55 @@ export default {
                 colGroups: [
                   [
                     {
-                      image: this.lambangBase64,
-                      imageWidth: 100,
-                      imageHeight: 60
+                      image: printInput.lambang,
+                      imageWidth: 60,
+                      imageHeight: 40
                     }
                   ]
                 ],
-                colMd: 2
+                colMd: 2,
+                colClass: "mb5"
               },
               {
                 colGroups: [
                   [
                     {
-                      text: this.input.namaPT,
+                      text: printInput.namaPT,
                       align: "center",
-                      colClass: "h4"
+                      colClass: "p"
                     },
                     {
-                      text: this.input.alamat,
-                      align: "center"
+                      text: printInput.alamatPT,
+                      align: "center",
+                      colClass: "small"
+                    },
+                    {
+                      text: printInput.nomorTeleponPT,
+                      align: "center",
+                      colClass: "small"
                     }
                   ]
                 ],
-                colMd: 7
+                colMd: 7,
+                colClass: "mb5"
               },
               {
                 colGroups: [
                   [
                     {
-                      text: `NPWP KSE : ${this.input.NPWP}`,
+                      text: `NPWP ${printInput.aliasPT} : ${printInput.NPWP}`,
                       colMd: 12,
-                      colClass: "mt10"
+                      colClass: "mt10,small"
                     },
                     {
-                      text: `INU NO : -`,
-                      colMd: 12
+                      text: `INU NO : ${printInput.INU}`,
+                      colMd: 12,
+                      colClass: "small"
                     }
                   ]
                 ],
-                colMd: 3
+                colMd: 3,
+                colClass: "mb5"
               },
               {
                 cTable: {
@@ -233,12 +252,12 @@ export default {
                     {
                       text: "SURAT JALAN",
                       align: "center",
-                      colClass: "h5,mt10,mb5"
+                      colClass: "h5,mt10,mb5,p"
                     },
                     {
                       text: "DELIVERY ORDER (DO)",
                       align: "center",
-                      colClass: "mb10"
+                      colClass: "mb10,small"
                     }
                   ]
                 ],
@@ -254,23 +273,32 @@ export default {
                         [
                           {
                             label: "Nomor Surat Jalan",
-                            value: ": -"
+                            labelWidth: 60,
+                            value: `: ${printInput.aliasPT} - `,
+                            style: "small"
                           },
                           {
                             label: "Tanggal",
-                            value: ": -"
+                            labelWidth: 60,
+                            value: ": -",
+                            style: "small"
                           },
                           {
                             label: "Kepada Yth./ To",
-                            value: ": -"
+                            labelWidth: 60,
+                            value: ": -",
+                            style: "small"
                           },
                           {
                             label: " ",
+                            labelWidth: 60,
                             value: " "
                           },
                           {
                             label: "Contact Person",
-                            value: ": -"
+                            labelWidth: 60,
+                            value: ": -",
+                            style: "small"
                           }
                         ]
                       ]
@@ -287,23 +315,33 @@ export default {
                         [
                           {
                             label: "Nomor Kendaraan",
-                            value: ": -"
+                            labelWidth: 70,
+                            value: ": -",
+                            style: "small"
                           },
                           {
                             label: "Nomor Segel Atas",
-                            value: ": -"
+                            labelWidth: 70,
+                            value: ": -",
+                            style: "small"
                           },
                           {
                             label: "Nomor Segel Bawah",
-                            value: ": -"
+                            labelWidth: 70,
+                            value: ": -",
+                            style: "small"
                           },
                           {
                             label: "Nama Transportasi",
-                            value: ": -"
+                            labelWidth: 70,
+                            value: ": -",
+                            style: "small"
                           },
                           {
                             label: "Warna Segel",
-                            value: ": -"
+                            labelWidth: 70,
+                            value: ": -",
+                            style: "small"
                           }
                         ]
                       ]
@@ -318,49 +356,85 @@ export default {
                 colGroups: [
                   [
                     {
-                      table: {
-                        fields: [
-                          {
-                            title: "No.",
-                            id: "no"
-                          },
-                          {
-                            title: "Nama Barang",
-                            id: "nama_barang"
-                          },
-                          {
-                            title: "Kwantitas",
-                            id: "qty"
-                          },
-                          {
-                            title: "SG",
-                            id: "sg"
-                          },
-                          {
-                            title: "Temperatur",
-                            id: "temperatur"
-                          },
-                          {
-                            title: "Cairan",
-                            id: "cairan"
-                          }
-                        ],
-                        data: [
-                          {
-                            no: 1,
-                            nama_barang: "HSD INDUSTRI",
-                            qty: "10.000",
-                            sg: "0,387",
-                            temperatur: "-",
-                            cairan: "-"
-                          }
+                      cTable: {
+                        widths: [15, 92, 87, 20, "*", "*"],
+                        body: [
+                          [
+                            {
+                              text: "No",
+                              alignment: "center",
+                              style: "small"
+                            },
+                            {
+                              text: "Nama Barang",
+                              alignment: "center",
+                              style: "small"
+                            },
+                            {
+                              text: "Kwantitas/Satuan (LTR",
+                              alignment: "center",
+                              style: "small"
+                            },
+                            {
+                              text: "SG",
+                              alignment: "center",
+                              style: "small"
+                            },
+                            {
+                              text: "Temperatur",
+                              alignment: "center",
+                              style: "small"
+                            },
+                            {
+                              text: "Tinggi Cairan",
+                              alignment: "center",
+                              style: "small"
+                            }
+                          ],
+                          [
+                            {
+                              text: "1",
+                              alignment: "center",
+                              style: "small",
+                              margin: [0,5,0,5]
+                            },
+                            {
+                              text: "HSD INDUSTRI",
+                              alignment: "center",
+                              style: "small",
+                              margin: [0,5,0,5]
+                            },
+                            {
+                              text: "10.000",
+                              alignment: "center",
+                              style: "small",
+                              margin: [0,5,0,5]
+                            },
+                            {
+                              text: "0.837",
+                              alignment: "center",
+                              style: "small",
+                              margin: [0,5,0,5]
+                            },
+                            {
+                              text: "",
+                              alignment: "center",
+                              style: "small",
+                              margin: [0,5,0,5]
+                            },
+                            {
+                              text: "",
+                              alignment: "center",
+                              style: "small",
+                              margin: [0,5,0,5]
+                            }
+                          ]
                         ]
                       }
                     }
                   ]
                 ],
-                colMd: 12,
-                colClass: "mt20"
+                colClass: "mt5"
               }
             ],
             [
@@ -475,7 +549,7 @@ export default {
                       colClass: "small"
                     },
                     {
-                      text: "1. Lembar pertama warna putih / asli untuk KSE",
+                      text: `1. Lembar pertama warna putih / asli untuk ${printInput.aliasPT}`,
                       colClass: "small"
                     },
                     {
@@ -498,7 +572,7 @@ export default {
           ]
         }
       ];
-      print(exportedData, "tes", "landscape");
+      print(exportedData, "tes", "potrait", "A5");
     }
   },
   computed: {
@@ -512,7 +586,7 @@ export default {
           id: "npwp"
         },
         {
-          id: "nomor_surat_jalan"
+          id: "inu"
         },
         {
           id: "alamat"
@@ -530,7 +604,7 @@ export default {
         this.settingInput = {
           namaPT: "",
           NPWP: "",
-          noSuratJalan: "",
+          inu: "",
           alamat: "",
           namaAlias: "",
           lambang: {}
@@ -554,9 +628,9 @@ export default {
           }
 
           if (this.settings[2].length > 0) {
-            this.settingInput.noSuratJalan = this.settings[2][0]["value"];
+            this.settingInput.inu = this.settings[2][0]["value"];
           } else {
-            this.setDefaultData("nomor_surat_jalan", "");
+            this.setDefaultData("inu", "");
             if (!isRefresh) isRefresh = true;
           }
 

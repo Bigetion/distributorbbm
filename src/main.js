@@ -36,13 +36,12 @@ import './stylus/main.styl'
 import Vuetify from 'vuetify'
 
 import Modal from 'vuejs-modal'
-// import ModalDialogs from 'vue-modal-dialogs'
 import Multiselect from 'vue-multiselect'
 import Toasted from 'vue-toasted'
-import Datepicker from 'vuejs-datepicker'
 import VueDatePicker from 'vue2-datepicker'
 
-// Import components\
+// Import components
+import Datepicker from './components/directives/Datepicker.vue'
 import VDatepicker from './components/directives/VDatepicker.vue'
 import Mapael from './components/directives/Mapael.vue'
 import Histats from './components/directives/Histats.vue'
