@@ -95,7 +95,7 @@ export default {
     };
   },
   created() {
-    this.selected = this.multiple ? []: null;
+    this.selected = this.multiple ? [] : null;
     if (this.fromFile) {
       this.getSelectViewOptions();
     } else {
@@ -139,40 +139,39 @@ export default {
         }
         this.$http.post("base/select/getData", params).then(response => {
           this.data = response.data.data;
-          if (this.multiple) {
-            this.selected = _.filter(this.data, o => {
-              const index = _.findIndex(this.value, p => {
-                return p === o[this.selectViewOptions.value];
-              });
-              return index > -1;
-            });
-            if (this.limitable) {
-              let limitableParams = {
-                name: this.fromFile
-              };
-              limitableParams.where = Object.assign(
-                {},
-                {
-                  [`${this.label || this.selectViewOptions.label}`]: this.value
-                }
-              );
-              this.$http
-                .post("base/select/getData", limitableParams)
-                .then(response2 => {
-                  if (response2.data.data) this.selected = response2.data.data;
-                });
-            }
-          } else {
-            this.selected = _.filter(this.data, o => {
-              return this.value === o[this.selectViewOptions.value];
-            });
-            this.selected = this.selected[0];
-          }
-          if (!this.selected) this.selected = null;
-
           setTimeout(() => {
+            if (this.multiple) {
+              this.selected = _.filter(this.data, o => {
+                const index = _.findIndex(this.value, p => {
+                  return p === o[this.selectViewOptions.value];
+                });
+                return index > -1;
+              });
+              if (this.limitable) {
+                let limitableParams = {
+                  name: this.fromFile
+                };
+                limitableParams.where = Object.assign(
+                  {},
+                  {
+                    [`${this.label || this.selectViewOptions.label}`]: this.value
+                  }
+                );
+                this.$http
+                  .post("base/select/getData", limitableParams)
+                  .then(response2 => {
+                    if (response2.data.data) this.selected = response2.data.data;
+                  });
+              }
+            } else {
+              const selected = _.filter(this.data, o => {
+                return this.value === o[this.selectViewOptions.value];
+              });
+              if (selected.length > 0) this.selected = selected[0];
+            }
+            if (!this.selected) this.selected = null;
             this.loading = false;
-          }, 1000);
+          }, 300);
         });
       } else {
         this.data = this.options;
@@ -184,15 +183,15 @@ export default {
             return index > -1;
           });
         } else {
-          this.selected = _.filter(this.data, o => {
-            return this.value === o[this.trackBy];
+          const selected = _.filter(this.data, o => {
+            return this.value === o[this.selectViewOptions.value];
           });
-          this.selected = this.selected[0];
+          if (selected.length > 0) this.selected = selected[0];
         }
         if (!this.selected) this.selected = null;
         setTimeout(() => {
           this.loading = false;
-        }, 1000);
+        }, 300);
       }
     },
     onSearch(q) {
@@ -219,6 +218,25 @@ export default {
     }
   },
   watch: {
+    value: {
+      handler() {
+        if (this.multiple) {
+          this.selected = _.filter(this.data, o => {
+            const index = _.findIndex(this.value, p => {
+              return p === o[this.trackBy];
+            });
+            return index > -1;
+          });
+        } else {
+          const selected = _.filter(this.data, o => {
+            return this.value === o[this.selectViewOptions.value];
+          });
+          if (selected.length > 0) this.selected = selected[0];
+        }
+        if (this.onSelected) this.onSelected(this.selected);
+      },
+      deep: true
+    },
     selected: {
       handler() {
         if (!this.loading) {

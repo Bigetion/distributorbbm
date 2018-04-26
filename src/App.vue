@@ -38,7 +38,7 @@
   </v-navigation-drawer>
   <v-toolbar class="green" dark fixed v-if="user.authenticated">
     <v-toolbar-side-icon dark @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-    <span class="title">Aplikasi Distributor <span class="text">BBM</span></span>
+    <span class="title">Aplikasi Distribusi BBM <span class="text">{{appStore.namaPT}}</span></span>
     <v-spacer></v-spacer>
     <v-menu offset-y>
       <v-btn icon dark slot="activator" class="cyan">
@@ -68,16 +68,17 @@
     </v-layout>
     <vuedal></vuedal>
   </main>
+  <query-service v-model="settings" from-file="settings" :extra-query-options="extraQueryOptions"></query-service>
 </v-app>
 </template>
 
 <script>
-import { Bus as Vuedals } from "vuedals";
 import _ from "lodash";
 import auth from "./utils/auth";
-
+import setAppStore from "./utils/store";
 export default {
   data: () => ({
+    appStore: {},
     windowSize: {
       x: 0,
       y: 0
@@ -89,42 +90,48 @@ export default {
         icon: "fa-gear",
         title: "Pengaturan",
         path: "pengaturan",
-        roles: [1,3]
+        roles: [1, 3]
       },
       {
         icon: "fa-shopping-cart",
         title: "Pembelian",
         path: "pembelian",
-        roles: [1,3,4]
+        roles: [1, 3, 4]
       },
       {
         icon: "fa-users",
         title: "Data Customer",
         path: "customer",
-        roles: [1,3,4]
+        roles: [1, 3, 4]
       },
       {
         icon: "fa-archive",
         title: "Penjualan",
         path: "penjualan",
-        roles: [1,3,4]
+        roles: [1, 3, 4]
       },
       {
         icon: "fa-folder",
         title: "Rekap Data",
         path: "rekap-data",
-        roles: [1,3,4]
-      },{
+        roles: [1, 3, 4]
+      },
+      {
         icon: "fa-building",
         title: "Gudang",
         path: "gudang",
-        roles: [1,3,4]
+        roles: [1, 3, 4]
       }
-    ]
+    ],
+    settings: {}
   }),
   created() {
     auth.getUserInfo(this);
     this.getActiveLink(this.menus);
+
+    window.eventBus.$on("appStore", appStore => {
+      this.appStore = appStore;
+    });
   },
   methods: {
     onResize() {
@@ -161,6 +168,24 @@ export default {
   watch: {
     $route() {
       this.getActiveLink(this.menus);
+    },
+    settings: {
+      handler() {
+        if (this.settings[0].length > 0) {
+          setAppStore("namaPT", this.settings[0][0]["value"]);
+        }
+      },
+      deep: true
+    }
+  },
+  computed: {
+    extraQueryOptions() {
+      let where = [
+        {
+          id: "nama_pt"
+        }
+      ];
+      return where;
     }
   }
 };
@@ -301,10 +326,13 @@ table.table tbody th {
   border: none !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.5) !important;
   border-radius: 0px !important;
-  box-shadow: inset 0 0px 0px rgba(0,0,0,.075) !important;
+  box-shadow: inset 0 0px 0px rgba(0, 0, 0, 0.075) !important;
 }
 .keterangan {
   margin-top: -20px;
   position: absolute;
+}
+.float-right {
+  float: right;
 }
 </style>

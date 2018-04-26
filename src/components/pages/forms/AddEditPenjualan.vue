@@ -3,6 +3,17 @@
     <v-form v-model="valid" ref="form">
       <v-card flat class="pa-4">
         <v-layout row wrap>
+          <v-flex md12 class="px-2">
+            <select-view 
+              placeholder="Customer" 
+              v-model="input.customer" 
+              from-file="customer" 
+              name="Customer" 
+              :error-messages="errors.collect('Customer')" 
+              v-validate="'required'"
+              :on-selected="onSelectedCustomer"
+            ></select-view>
+          </v-flex>
           <v-flex md6 class="px-2">
             <datepicker 
               label="Tanggal" 
@@ -22,9 +33,6 @@
           <v-flex md6 class="px-2">
             <v-text-field label="Harga / Liter" name="Harga" v-model="input.harga" :error-messages="errors.collect('Harga')" v-validate="'required'"></v-text-field>
           </v-flex>
-          <v-flex md6 class="px-2 detail">
-            <v-text-field label="Jumlah Bayar" :value="jumlahBayarFormat" :disabled="true"></v-text-field>
-          </v-flex>
           <v-flex md6 class="px-2">
             <v-select
               :items="['Cash','Kredit']"
@@ -37,6 +45,9 @@
           </v-flex>
           <v-flex md6 class="px-2">
             <v-text-field label="TOP" name="TOP" v-model="input.top" :error-messages="errors.collect('TOP')" v-validate="'required'"></v-text-field>
+          </v-flex>
+          <v-flex md6 class="px-2 detail">
+            <v-text-field label="Jumlah Bayar" :value="jumlahBayarFormat" :disabled="true"></v-text-field>
           </v-flex>
           <v-flex md6 class="px-2 detail">
             <v-text-field label="Jatuh Tempo" :value="jatuhTempoFormat" :disabled="true"></v-text-field>
@@ -68,6 +79,7 @@ export default {
   },
   data: () => ({
     input: {
+      customer: "",
       tanggal: new Date(),
       statusBayar: "",
       qty: "",
@@ -79,6 +91,7 @@ export default {
   created() {
     if (this.isEdit) {
       this.input = {
+        customer: this.data["customer"],
         tanggal: moment(this.data["tanggal"]),
         statusBayar: this.data["status_bayar"],
         qty: this.data["qty"],
@@ -139,6 +152,7 @@ export default {
     },
     penjualanData() {
       let data = {
+        customer: this.input["customer"],
         tanggal_penjualan: this.input["tanggal"],
         status_bayar: this.input["statusBayar"],
         qty: this.input["qty"],

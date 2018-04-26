@@ -1,8 +1,9 @@
 <template id="login">
   <v-card align-center class="login mt-5 elevation-10">
-    <v-toolbar class="grey lighten-3" light flat>
-      <v-toolbar-title>Aplikasi Distributor BBM</v-toolbar-title>
-    </v-toolbar>
+    <div class="grey lighten-3 px-2" light flat>
+      <p class="title text-xs-center pt-3">Aplikasi Distribusi BBM</p>
+      <p class="subheading text-xs-center pb-3">{{appStore.namaPT}}</p>
+    </div>
     <v-container class="login">
       <v-form v-model="valid" ref="form">
         <div class="mx-2">
@@ -28,6 +29,7 @@ import loginImg from "./../../assets/logo_master.png";
 export default {
   data() {
     return {
+      appStore: {},
       error: null,
       input: {
         username: "",
@@ -39,7 +41,11 @@ export default {
       }
     };
   },
-  computed: {},
+  created() {
+    window.eventBus.$on("appStore", appStore => {
+      this.appStore = appStore;
+    });
+  },
   methods: {
     cancel() {
       this.$router.push("/");
@@ -71,7 +77,8 @@ export default {
         }
       });
     }
-  }
+  },
+  computed: {}
 };
 </script>
 

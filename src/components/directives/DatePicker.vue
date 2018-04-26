@@ -2,11 +2,10 @@
   <v-layout row wrap>
     <v-flex>
       <v-menu
-        lazy
-        :close-on-content-click="true"
         offset-y
         full-width
         max-width="290px"
+        :z-index="zIndex"
       >
         <v-text-field
           slot="activator"
@@ -53,7 +52,12 @@ export default {
         return [];
       }
     },
-    disabled: {}
+    disabled: {},
+    zIndex: {
+      default: function() {
+        return 6;
+      }
+    },
   },
   data() {
     return {

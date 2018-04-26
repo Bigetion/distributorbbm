@@ -21,6 +21,7 @@
             :is-delete="state.isDelete"
             :is-download="state.isDownload"
             :on-select="onSelect"
+            :extra-query-options="extraQueryOptions"
           ></table-view>
         </v-card>
         <v-divider></v-divider>
@@ -70,6 +71,27 @@ export default {
     onSubmitted() {
       this.onCancel();
       this.state.isRefresh = !this.state.isRefresh;
+    }
+  },
+  computed: {
+    extraQueryOptions() {
+      let extraQueryOptions = false;
+      extraQueryOptions = {
+        AND: {
+          OR: {
+            "customer.nama[~]": this.q,
+            "customer.alamat[~]": this.q,
+            "customer.telepon[~]": this.q,
+            "customer.nomor_rekening[~]": this.q,
+            "customer.bank[~]": this.q
+          },
+          "customer.id[!]": "-1"
+        }
+      };
+      if (this.q == "") {
+        delete extraQueryOptions["AND"]["OR"];
+      }
+      return extraQueryOptions;
     }
   }
 };

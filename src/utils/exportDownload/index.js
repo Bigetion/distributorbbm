@@ -37,7 +37,6 @@ function pdfByteArray(content, filename, orientation, pageSize) {
 
 function print(content, filename, orientation, pageSize) {
   var docDefinition = Pdf.generateDocDefinition(content, filename, orientation, pageSize);
-  console.log(JSON.stringify(docDefinition.content));
   pdfMake.createPdf(docDefinition).print();
 }
 

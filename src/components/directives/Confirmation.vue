@@ -2,7 +2,7 @@
   <v-layout justify-center class="modal-content">
     <v-card class="white confirmation-content">
       <v-card-title>
-        <div class="headline">Confirmation</div>
+        <div class="headline">{{title}}</div>
       </v-card-title>
       <v-card-text>{{message}}</v-card-text>
       <v-card-actions>
@@ -16,7 +16,20 @@
 
 <script>
 export default {
-  props: ['message'],
+  props: {
+    title: {
+      type: String,
+      default: function() {
+        return "Confirmation";
+      }
+    },
+    message: {
+      type: String,
+      default: function() {
+        return "-";
+      }
+    }
+  },
   data() {
     return {}
   },
