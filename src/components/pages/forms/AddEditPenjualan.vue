@@ -12,6 +12,7 @@
               :error-messages="errors.collect('Customer')" 
               v-validate="'required'"
               :on-selected="onSelectedCustomer"
+              :searchable="true"
             ></select-view>
           </v-flex>
           <v-flex md6 class="px-2">
@@ -60,6 +61,7 @@
         <v-btn error @click="cancel()">Batal</v-btn>
       </v-card>
     </v-form>
+    <query-service v-model="settings" from-file="settings" :extra-query-options="extraQueryOptions"></query-service>
   </div>
 </template>
 
@@ -86,7 +88,9 @@ export default {
       jenisPembayaran: "",
       harga: "",
       top: ""
-    }
+    },
+    settings: [],
+    namaAlias: ""
   }),
   created() {
     if (this.isEdit) {
@@ -109,6 +113,17 @@ export default {
             .post("base/service/executeMutation", this.penjualanParams)
             .then(response => {
               if (response.data.success_message) {
+                this.$http.post("base/service/executeMutation", {
+                  id: response.data.id,
+                  type: "update",
+                  name: "penjualan",
+                  data: {
+                    nomor_do: `${this.namaAlias}-${this.pad(
+                      response.data.id,
+                      6
+                    )}`
+                  }
+                });
                 if (this.onSubmitted) this.onSubmitted();
               }
             });
@@ -123,9 +138,34 @@ export default {
     formatCurrency(value) {
       let val = (value / 1).toFixed(0).replace(".", ",");
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    },
+    pad(n, width, z) {
+      z = z || "0";
+      n = n + "";
+      return n.length >= width
+        ? n
+        : new Array(width - n.length + 1).join(z) + n;
+    }
+  },
+  watch: {
+    settings: {
+      handler() {
+        if (this.settings[0].length > 0) {
+          this.namaAlias = this.settings[0][0]["value"];
+        }
+      },
+      deep: true
     }
   },
   computed: {
+    extraQueryOptions() {
+      let where = [
+        {
+          id: "nama_alias"
+        }
+      ];
+      return where;
+    },
     jatuhTempoFormat() {
       return moment(this.jatuhTempo).format("DD MMMM YYYY");
     },

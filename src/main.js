@@ -32,6 +32,9 @@ import PictureInput from 'vue-picture-input'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
 import 'element-ui/lib/theme-chalk/index.css'
 
+import 'viewerjs/dist/viewer.css'
+import Viewer from 'v-viewer'
+
 import './stylus/main.styl'
 import Vuetify from 'vuetify'
 
@@ -68,6 +71,7 @@ Vue.use(Vuedals)
 Vue.use(VueFroala)
 Vue.use(Croppa)
 Vue.use(Toasted)
+Vue.use(Viewer)
 Vue.component('mapael', Mapael)
 Vue.component('histats', Histats)
 Vue.component('datepicker', Datepicker)

@@ -212,14 +212,5 @@ export default {
 </script>
 
 <style lang="css">
-.picture-preview-label {
-  font-size: 12px !important;
-}
-.preview-container {
-  margin: 3px 0 0 0 !important;
-}
-.preview-container .picture-preview {
-  z-index: 1 !important;
-  border: 4px solid slategrey !important;
-}
+
 </style>

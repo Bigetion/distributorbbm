@@ -73,7 +73,7 @@ export default {
       pagination: {
         page: 1,
         sortBy: null,
-        rowsPerPage: 25
+        rowsPerPage: 10
       },
       totalRows: 0,
       paginationSort: {},

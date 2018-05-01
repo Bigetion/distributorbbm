@@ -1,16 +1,14 @@
 <template>
   <div>
-    <v-toolbar class="grey lighten-3" light flat v-if="user.authenticated">
+    <v-toolbar class="grey lighten-3" light flat>
       <v-toolbar-title>Selamat Datang</v-toolbar-title>
     </v-toolbar>
   </div>
 </template>
 
 <script>
-import auth from "./../../utils/auth"
 export default {
   data: () => ({
-    user: auth.user
   }),
   methods: {},
   created() {}

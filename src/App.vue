@@ -335,4 +335,17 @@ table.table tbody th {
 .float-right {
   float: right;
 }
+.picture-preview-label {
+  font-size: 12px !important;
+}
+.preview-container {
+  margin: 3px 0 0 0 !important;
+}
+.preview-container .picture-preview {
+  z-index: 1 !important;
+  border: 4px solid slategrey !important;
+}
+.btn-row {
+  margin-left: -2px !important;
+}
 </style>

@@ -67,9 +67,15 @@ export default {
   },
   methods: {},
   created() {
-    if(this.value!="") this.date = this.value;
+    if(this.value!="") this.date = moment(this.value);
   },
   watch: {
+    value: {
+      handler() {
+        this.date = moment(this.value);
+      },
+      deep: true
+    },
     date: {
       handler() {
         this.$emit("input", moment(this.date).format(this.format));

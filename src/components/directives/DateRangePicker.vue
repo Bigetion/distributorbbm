@@ -1,80 +1,72 @@
 <template>
-  <div class="drp">
+  <div class="date-range-picker">
     <div :style="{float: 'left', marginRight: '10px'}" >
-      <span :style="{margin: '5px 5px 0 5px', fontSize: '10px'}">{{fromLabel}}</span>
-      <datepicker v-model="value.from" :format="format"></datepicker>
+      <datepicker :label="fromLabel" v-model="value.from" :format="format" :value-format="valueFormat"></datepicker>
     </div>
     <div :style="{float: 'left'}" >
-      <span :style="{margin: '5px 5px 0 5px', fontSize: '10px'}">{{toLabel}}</span>
-      <datepicker v-model="value.to" :format="format"></datepicker>
+      <datepicker :label="toLabel" v-model="value.to" :format="format" :value-format="valueFormat"></datepicker>
     </div>
     <div :style="{clear: 'both'}"></div>
   </div>
 </template>
 
 <script>
-import _ from 'lodash';
+import _ from "lodash";
 export default {
   props: {
     value: {
       required: true,
-      default: function () { 
+      default: function() {
         return {
           from: new Date(),
           to: new Date()
-        } 
+        };
       }
     },
     fromLabel: {
       type: String,
-      default: function () { 
-        return "From"
+      default: function() {
+        return "From";
       }
     },
     toLabel: {
       type: String,
-      default: function () { 
-        return "To"
+      default: function() {
+        return "To";
       }
     },
     format: {
       type: String,
-      default: function () { 
-        return "d MMMM yyyy"
+      default: function() {
+        return "YYYY-MM-DD";
+      }
+    },
+    valueFormat: {
+      type: String,
+      default: function() {
+        return "DD/MM/YYYY";
       }
     }
   },
   data() {
-    return {
-      
-    };
+    return {};
   },
-  methods: {
-    
-  },
-  created() {
-
-  },
+  methods: {},
+  created() {},
   watch: {
     value: {
       handler() {
-        this.$emit('input', this.value)
+        this.$emit("input", this.value);
       },
       deep: true
     }
   },
-  computed: {
-
-  }
+  computed: {}
 };
 </script>
 
 <style lang="css">
-  .drp .vdp-datepicker input {
-    padding: 5px;
-    border-bottom: 2px solid #707070;
-    cursor: pointer;
-    margin-bottom: 2px;
-    font-weight: bold;
-  }
+.date-range-picker {
+  max-width: 500px !important;
+}
 </style>

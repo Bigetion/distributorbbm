@@ -52,7 +52,8 @@
                   { text: 'Nama Barang', value: 'nama_barang', sortable: false, align: 'center' },
                   { text: 'SG', value: 'sq', sortable: false, align: 'center' },
                   { text: 'Temperatur', value: 'temperatur', sortable: false, align: 'center' },
-                  { text: 'Tinggi cairan', value: 'tinggi_cairan', sortable: false, align: 'center' }
+                  { text: 'Tinggi cairan', value: 'tinggi_cairan', sortable: false, align: 'center' },
+                  { text: 'Aksi', value: 'aksi', sortable: false, align: 'center' }
                 ]"
                 :items="barang"
                 hide-actions
@@ -64,6 +65,11 @@
                 <td class="text-xs-center">{{ props.item.sg }}</td>
                 <td class="text-xs-center">{{ props.item.temperatur }}</td>
                 <td class="text-xs-center">{{ props.item.tinggi_cairan }}</td>
+                <td class="text-xs-center">
+                  <v-btn icon ripple @click.stop="removeBarang(props.index)">
+                    <v-icon class="subheading red--text text--lighten-1">close</v-icon>
+                  </v-btn>
+                </td>
               </template>
             </v-data-table>
             </v-flex>
@@ -127,6 +133,7 @@ export default {
     this.$http.post("image/getbase64/lambang", {}).then(response => {
       this.lambangBase64 = response.data.base64;
     });
+    this.input.nomorSuratJalan = this.data["nomor_do"];
   },
   methods: {
     submit() {
@@ -215,6 +222,9 @@ export default {
         }
       });
     },
+    removeBarang(index) {
+      this.barang.splice(index, 1);
+    },
     saveBarang() {
       this.$http
         .post("base/service/executeMutation", {
@@ -235,7 +245,7 @@ export default {
         lambang: this.lambangBase64,
         namaPT: this.settings.nama_pt,
         alamatPT: this.settings.alamat,
-        nomorTeleponPT: "0532-2031746",
+        // nomorTeleponPT: "0532-2031746",
         NPWP: this.settings.npwp,
         INU: this.settings.inu,
         aliasPT: this.settings.nama_alias,
@@ -349,12 +359,12 @@ export default {
                       text: printInput.alamatPT,
                       align: "center",
                       colClass: "small"
-                    },
-                    {
-                      text: printInput.nomorTeleponPT,
-                      align: "center",
-                      colClass: "small"
                     }
+                    // {
+                    //   text: printInput.nomorTeleponPT,
+                    //   align: "center",
+                    //   colClass: "small"
+                    // }
                   ]
                 ],
                 colMd: 7,
@@ -671,8 +681,8 @@ export default {
         : new Array(width - n.length + 1).join(z) + n;
     },
     formatCurrency(value) {
-      let val = (value/1).toFixed(0).replace('.', ',')
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+      let val = (value / 1).toFixed(0).replace(".", ",");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
   },
   watch: {
@@ -704,9 +714,9 @@ export default {
           this.penjualan[2].forEach(item => {
             this.settings[item.id] = item.value;
           });
-          this.input.nomorSuratJalan = `${
-            this.settings["nama_alias"]
-          } - ${this.pad(this.data["id"], 6)}`;
+          // this.input.nomorSuratJalan = `${
+          //   this.settings["nama_alias"]
+          // } - ${this.pad(this.data["id"], 6)}`;
         }
       },
       deep: true
@@ -731,11 +741,4 @@ export default {
 };
 </script>
 
-<style lang="css">
-.cetak-modal {
-  top: 40%;
-  width: 400px;
-  margin: 0 auto;
-  background-color: #ffffff;
-}
-</style>
+<style lang="css"></style>

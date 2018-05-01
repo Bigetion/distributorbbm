@@ -5619,6 +5619,12 @@ v-hotkey@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/v-hotkey/-/v-hotkey-0.2.0.tgz#26cd4a3d7459cba7c47337ee3f637246e32276c1"
 
+v-viewer@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/v-viewer/-/v-viewer-1.0.1.tgz#64020be8d72df4980723e782f7d43e13f539ac1c"
+  dependencies:
+    viewerjs "^1.0.0"
+
 validator@^5.2.0:
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/validator/-/validator-5.7.0.tgz#7a87a58146b695ac486071141c0c49d67da05e5c"
@@ -5634,6 +5640,10 @@ vee-validate@^2.0.0-beta.14:
 vendors@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/vendors/-/vendors-1.0.2.tgz#7fcb5eef9f5623b156bcea89ec37d63676f21801"
+
+viewerjs@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/viewerjs/-/viewerjs-1.0.0.tgz#d08904fed1b383121385542b6fa13baec55d07e1"
 
 vm-browserify@0.0.4:
   version "0.0.4"

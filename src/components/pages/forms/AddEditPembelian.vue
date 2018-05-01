@@ -41,6 +41,29 @@
           <v-flex md6 class="px-2 detail">
             <v-text-field label="Jatuh Tempo" :value="jatuhTempoFormat" :disabled="true"></v-text-field>
           </v-flex>
+          <v-flex md6>
+            <div class="px-2">
+              <span class="picture-preview-label">File PO</span><br>
+              <picture-input
+                @change="onChangeFilePO" 
+                width="400" 
+                height="250"
+                accept="image/jpeg,image/png" 
+                size="5"
+                :crop="false"
+                :hideChangeButton="true"
+                :customStrings="{
+                  drag: 'Upload File PO'
+                }"
+                :prefill="`${baseUrl}${input.nomorPO}`"
+                :prefillOptions="{
+                  fileType: 'jpg',
+                  mediaType: 'image/png'
+                }"
+                class="preview-container"
+              ></picture-input>
+            </div>
+          </v-flex>
         </v-layout>
       </v-card>
       <v-divider></v-divider>
@@ -56,6 +79,7 @@
 import moment from "moment";
 export default {
   props: {
+    baseUrl: {},
     data: {},
     isEdit: {
       type: Boolean,
@@ -75,7 +99,8 @@ export default {
       jenisPembayaran: "",
       harga: "",
       top: ""
-    }
+    },
+    filePO: ""
   }),
   created() {
     if (this.isEdit) {
@@ -91,6 +116,9 @@ export default {
     }
   },
   methods: {
+    onChangeFilePO(a) {
+      this.filePO = a;
+    },
     submit() {
       this.$validator.validateAll().then(() => {
         if (!this.errors.any()) {
@@ -98,6 +126,17 @@ export default {
             .post("base/service/executeMutation", this.pembelianParams)
             .then(response => {
               if (response.data.success_message) {
+                if (this.filePO != "") {
+                  this.$http.post("base/upload/image", {
+                    images: [
+                      {
+                        path: "filePO",
+                        base64: this.filePO,
+                        name: this.input.nomorPO
+                      }
+                    ]
+                  });
+                }
                 if (this.onSubmitted) this.onSubmitted();
               }
             });

@@ -6,16 +6,17 @@
       :placeholder="label"
       v-model="mvalue"
       :format="format"
-      lang="en">
-    </vue-datepicker>
+      lang="en"
+    ></vue-datepicker>
     <vue-datepicker
       v-show="range"
       :placeholder="label"
       v-model="mvalue"
       range
+      :range-separator="rangeSeparator"
       :format="format"
-      lang="en">
-    </vue-datepicker>
+      lang="en"
+    ></vue-datepicker>
     <div class="input-group input-group__details" v-show="errorMessages.length>0">
       <div class="input-group__error">{{errorMessages[0]}}</div>
     </div>
@@ -42,6 +43,12 @@ export default {
     },
     range: {
       type: Boolean
+    },
+    rangeSeparator: {
+      type: String,
+      default: function() {
+        return " - "
+      }
     },
     format: {
       type: String,
@@ -90,12 +97,20 @@ export default {
 
 <style lang="css">
 .v-datepicker {
-  margin-top: 20px;
+  margin-top: 15px !important;
+  position: relative !important;
+}
+.v-datepicker .mx-input {
+  padding: 10px 30px 6px 0px !important;
 }
 .v-datepicker-error ::placeholder {
   color: #ff5252;
 }
 .v-datepicker-label {
   color: rgba(0, 0, 0, 0.6) !important;
+  position: absolute;
+  top: 0;
+  z-index: 2 !important;
+  margin-top: -12px !important;
 }
 </style>

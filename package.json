@@ -59,6 +59,7 @@
     "tree-vue-component": "^5.0.0",
     "url-loader": "^0.5.7",
     "v-hotkey": "^0.2.0",
+    "v-viewer": "^1.0.1",
     "vee-validate": "^2.0.0-beta.14",
     "vue": "^2.0.1",
     "vue-croppa": "^1.0.2",

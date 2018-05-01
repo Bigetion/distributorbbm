@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'select-error': errorMessages.length>0, 'select-null': (selected==null), 'multiple': (multiple && selected.length > 0), 'input-select': true}">
+  <div :class="{'select-error': errorMessages.length>0, 'select-null': (selected==null), 'multiple': (multiple && selected.length > 0), 'input-select': true, 'select-view': true}">
     <div v-if="!multiple" class="multiselect__label">{{ (selected!=null) ? placeholder: ''}}</div>
     <div v-if="multiple" class="multiselect__label">{{ (selected.length > 0) ? placeholder: ''}}</div>
     <multiselect
@@ -11,7 +11,7 @@
       :searchable="searchable"
       :multiple="true" 
       select-label="" deselect-label="" 
-      :close-on-select="true" :hide-selected="true" :preserve-search="true"
+      :close-on-select="true" :hide-selected="true" 
       :placeholder="placeholder"
       :disabled="disabled"
       @search-change="asyncFind"
@@ -26,7 +26,7 @@
       :searchable="searchable"
       :multiple="false" 
       select-label="" deselect-label="" 
-      :close-on-select="true" :hide-selected="false" :preserve-search="true"
+      :close-on-select="true" :hide-selected="false" 
       :placeholder="placeholder"
       :disabled="disabled"
       @search-change="asyncFind"
@@ -184,7 +184,7 @@ export default {
           });
         } else {
           const selected = _.filter(this.data, o => {
-            return this.value === o[this.selectViewOptions.value];
+            return this.value === o[this.trackBy];
           });
           if (selected.length > 0) this.selected = selected[0];
         }
@@ -279,7 +279,8 @@ export default {
 
 <style lang="css">
 .input-select {
-  margin-top: 5px;
+  margin-top: 14px;
+  position: relative !important;
 }
 
 .input-select .multiselect__tags {
@@ -310,14 +311,23 @@ export default {
   color: rgba(0, 0, 0, 0.5);
 }
 
+.multiselect__tags {
+  min-height: 0px !important;
+}
+
 .multiselect__label {
   font-size: 13px;
   color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  margin-top: -13px;
 }
 
 .multiselect__input,
 .multiselect__single {
-  margin-left: -6px !important;
+  margin-left: -4px !important;
+  margin-bottom: 6px !important;
 }
 
 .multiple .multiselect__single {
