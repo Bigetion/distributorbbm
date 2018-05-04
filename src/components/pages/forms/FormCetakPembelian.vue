@@ -20,17 +20,18 @@
             value-format="DD MMMM YYYY"
             :z-index="1099"
           ></datepicker>
-          <v-text-field label="Mengetahui" name="Mengetahui" v-model="input.mengetahui" :error-messages="errors.collect('Mengetahui')" v-validate="'required'"></v-text-field>
-          <v-text-field label="Approve Oleh" name="Approve Oleh" v-model="input.approveOleh" :error-messages="errors.collect('ApproveOleh')" v-validate="'required'"></v-text-field>
+          <v-text-field label="Kepada Yth." name="Kepada" v-model="input.kepada" :error-messages="errors.collect('Kepada')" v-validate="'required'" multi-line></v-text-field>
+          <v-text-field label="Note" name="Note" v-model="input.note" :error-messages="errors.collect('Note')" v-validate="'required'" multi-line :rows="8"></v-text-field>
         </v-card>
         <v-card flat v-if="step==2">
           <v-layout row wrap>
             <v-flex md6>
               <div class="pa-4 detail">
-                <v-text-field label="Nama Barang" name="Nama Barang" v-model="inputBarang.namaBarang" :error-messages="errors.collect('Nama Barang')" v-validate="{required: step==2}"></v-text-field>
+                <v-text-field label="Jenis BBM" name="Jenis BBM" v-model="inputBarang.namaBarang" :error-messages="errors.collect('Jenis BBM')" v-validate="{required: step==2}"></v-text-field>
                 <v-text-field label="QTY" name="QTY" v-model="inputBarang.qty" :error-messages="errors.collect('QTY')" v-validate="{required: step==2}"></v-text-field>
-                <v-text-field label="Harga / Liter" name="Harga" v-model="inputBarang.harga" :error-messages="errors.collect('Harga')" v-validate="{required: step==2}"></v-text-field>
-                <v-text-field label="Total" name="Total" v-model="jumlahBayarFormat" :error-messages="errors.collect('Total')" v-validate="{required: step==2}" :disabled="true"></v-text-field>
+                <v-text-field label="Harga Satuan" name="Harga Satuan" v-model="inputBarang.harga" :error-messages="errors.collect('Harga Satuan')" v-validate="{required: step==2}"></v-text-field>
+                <v-text-field label="Diskon" name="Diskon" v-model="inputBarang.diskon" :error-messages="errors.collect('Diskon')" v-validate="{required: step==2}"></v-text-field>
+                <v-text-field label="Jumlah" name="Jumlah" v-model="jumlahBayarFormat" :error-messages="errors.collect('Jumlah')" v-validate="{required: step==2}" :disabled="true"></v-text-field>
               </div>
               <div class="px-3 mb-4">
                 <v-btn success @click="addBarang()">Tambah Barang</v-btn>
@@ -39,10 +40,11 @@
             <v-flex md6 class="pa-4">
               <v-data-table
                 v-bind:headers="[
-                  { text: 'Nama Barang', value: 'nama_barang', sortable: false, align: 'center' },
+                  { text: 'Jenis BBM', value: 'nama_barang', sortable: false, align: 'center' },
                   { text: 'QTY', value: 'qty', sortable: false, align: 'center' },
-                  { text: 'Harga / Liter', value: 'harga', sortable: false, align: 'center' },
-                  { text: 'Total', value: 'total', sortable: false, align: 'center' },
+                  { text: 'Harga Satuan', value: 'harga', sortable: false, align: 'center' },
+                  { text: 'Discount', value: 'diskon', sortable: false, align: 'center' },
+                  { text: 'Jumlah', value: 'total', sortable: false, align: 'center' },
                   { text: 'Aksi', value: 'aksi', sortable: false, align: 'center' }
                 ]"
                 :items="barang"
@@ -53,6 +55,7 @@
                 <td class="text-xs-center">{{ props.item.nama_barang }}</td>
                 <td class="text-xs-center">{{ props.item.qty }}</td>
                 <td class="text-xs-center">{{ formatCurrency(props.item.harga) }}</td>
+                <td class="text-xs-center">{{ props.item.diskon }}%</td>
                 <td class="text-xs-center">{{ formatCurrency(props.item.total) }}</td>
                 <td class="text-xs-center">
                   <v-btn icon ripple @click.stop="removeBarang(props.index)">
@@ -95,13 +98,16 @@ export default {
       input: {
         nomorSuratJalan: "",
         tanggal: new Date(),
-        mengetahui: "",
-        approveOleh: ""
+        kepada:
+          "PT. PERTAMINA PATRA NIAGA\nGedung Wisma Tugu II, 2nd Floor, Jl. HR. Rasuna Said\nKav C7-9, Kuningan - Daerah Khusu Ibukota Jakarta\nUp. Bp. Zuhdy Munthaha",
+        note:
+          "1. Customer          : PT. Kalimantan Sumber Energi\n2. Pembayaran     : Bank Garansi\n3. Suplly Point      : TBBM SAMPIT\n4. TOP                    : 45 Hari\n5. LO                       : 5 KL\n6. SP                       : 896814\n7. SH                       : 906292 "
       },
       inputBarang: {
         namaBarang: "",
         qty: "",
-        harga: ""
+        harga: "",
+        diskon: 0
       },
       barang: [],
       step: 1,
@@ -124,8 +130,8 @@ export default {
             const data = {
               id_pembelian: this.data["id"],
               tanggal: moment(this.input.tanggal).format("YYYY-MM-DD"),
-              mengetahui: this.input.mengetahui,
-              approve_oleh: this.input.approveOleh
+              kepada: this.input.kepada,
+              note: this.input.note
             };
             if (this.pembelian[0].length == 0) {
               this.$http
@@ -169,13 +175,15 @@ export default {
             qty: this.inputBarang.qty,
             nama_barang: this.inputBarang.namaBarang,
             harga: this.inputBarang.harga,
+            diskon: this.inputBarang.diskon,
             total: this.jumlahBayar
           });
           this.$validator.reset();
           this.inputBarang = {
             qty: "",
             namaBarang: "",
-            harga: ""
+            harga: "",
+            diskon: 0
           };
         } else {
           $(`[name="${this.errors.items[0].field}"]`).focus();
@@ -205,7 +213,6 @@ export default {
         lambang: this.lambangBase64,
         namaPT: this.settings.nama_pt,
         alamatPT: this.settings.alamat,
-        // nomorTeleponPT: "0532-2031746",
         NPWP: this.settings.npwp,
         INU: this.settings.inu,
         aliasPT: this.settings.nama_alias,
@@ -213,42 +220,110 @@ export default {
         tanggal: moment(this.input.tanggal).format("DD MMMM YYYY"),
         jenisPembayaran: this.data["jenis_bayar"],
         TOP: this.data["top"],
-        tanggalJatuhTempo: moment(this.data["jatuh_tempo"]).format("DD MMMM YYYY"),
+        tanggalJatuhTempo: moment(this.data["jatuh_tempo"]).format(
+          "DD MMMM YYYY"
+        ),
         statusBayar: this.data["status_bayar"],
-        mengetahui: this.input.mengetahui,
-        approveOleh: this.input.approveOleh
+        kepada: this.input.kepada,
+        note: this.input.note,
+        ttd: this.ttdBase64
       };
+
+      let header = [
+        {
+          text: printInput.namaPT,
+          align: "center",
+          colClass: "h5"
+        }
+      ];
+
+      let alamatSplit = printInput.alamatPT.split(/\r?\n/);
+
+      alamatSplit.forEach(item => {
+        header.push({
+          text: item,
+          align: "center",
+          colClass: "small,mt5"
+        });
+      });
+
+      let kepadaYth = [
+        {
+          text: `Nomor PO : ${printInput.nomorSuratJalan}`,
+          colMd: 12,
+          colClass: ""
+        },
+        {
+          text: "Kepada Yth.",
+          colMd: 12,
+          colClass: "mt15"
+        }
+      ];
+      let kepadaSplit = printInput.kepada.split(/\r?\n/);
+
+      kepadaSplit.forEach(item => {
+        kepadaYth.push({
+          text: item,
+          align: "left",
+          colClass: ""
+        });
+      });
+
+      let note = [
+        {
+          text: "NOTE :",
+          colMd: 12,
+          colClass: "bold"
+        }
+      ];
+      let noteSplit = printInput.note.split(/\r?\n/);
+
+      noteSplit.forEach(item => {
+        note.push({
+          text: item,
+          colClass: "bold"
+        });
+      });
 
       let tabelBarang = [
         [
           {
             text: "No",
             alignment: "center",
-            style: "small"
+            style: "bold,small"
           },
           {
-            text: "Nama Barang",
+            text: "Jenis BBM",
             alignment: "center",
-            style: "small"
+            style: "bold,small"
           },
           {
             text: "QTY",
             alignment: "center",
-            style: "small"
+            style: "bold,small"
           },
           {
             text: "Harga",
             alignment: "center",
-            style: "small"
+            style: "bold,small"
           },
           {
-            text: "Total",
+            text: "Discount",
             alignment: "center",
-            style: "small"
+            style: "bold,small"
+          },
+          {
+            text: "Jumlah",
+            alignment: "center",
+            style: "bold,small"
           }
         ]
       ];
+      let totalBayar = 0;
       this.barang.forEach((item, index) => {
+        totalBayar += parseFloat(item.total);
+        const totalPPN = parseFloat(item.total) * 0.1;
+        totalBayar += parseFloat(totalPPN);
         tabelBarang.push([
           {
             text: index + 1,
@@ -257,7 +332,7 @@ export default {
           },
           {
             text: item.nama_barang,
-            alignment: "center",
+            alignment: "left",
             style: "small"
           },
           {
@@ -271,12 +346,68 @@ export default {
             style: "small"
           },
           {
-            text: this.formatCurrency(item.total),
+            text: `${item.diskon}%`,
             alignment: "center",
+            style: "small"
+          },
+          {
+            text: this.formatCurrency(item.total),
+            alignment: "right",
+            style: "small"
+          }
+        ]);
+        tabelBarang.push([
+          {
+            text: "",
+            alignment: "center",
+            style: "small"
+          },
+          {
+            text: "PPN 10%",
+            alignment: "left",
+            style: "small"
+          },
+          {
+            text: "",
+            alignment: "center",
+            style: "small"
+          },
+          {
+            text: "",
+            alignment: "center",
+            style: "small"
+          },
+          {
+            text: "",
+            alignment: "center",
+            style: "small"
+          },
+          {
+            text: this.formatCurrency(totalPPN),
+            alignment: "right",
             style: "small"
           }
         ]);
       });
+
+      tabelBarang.push([
+        {
+          text: "Total",
+          alignment: "left",
+          style: ["small", "bold"],
+          colSpan: 5
+        },
+        {},
+        {},
+        {},
+        {},
+        {
+          text: this.formatCurrency(totalBayar),
+          alignment: "right",
+          style: ["small", "bold"]
+        }
+      ]);
+
       var exportedData = [
         {
           colGroups: [
@@ -295,45 +426,12 @@ export default {
                 colClass: "mb5"
               },
               {
-                colGroups: [
-                  [
-                    {
-                      text: printInput.namaPT,
-                      align: "center",
-                      colClass: "h6"
-                    },
-                    {
-                      text: printInput.alamatPT,
-                      align: "center",
-                      colClass: "small"
-                    }
-                    // {
-                    //   text: printInput.nomorTeleponPT,
-                    //   align: "center",
-                    //   colClass: "small"
-                    // }
-                  ]
-                ],
+                colGroups: [header],
                 colMd: 7,
                 colClass: "mb5"
               },
               {
-                colGroups: [
-                  [
-                    {
-                      text: `NPWP ${printInput.aliasPT} : ${printInput.NPWP}`,
-                      colMd: 12,
-                      colClass: "mt10,small",
-                      align: "right"
-                    },
-                    {
-                      text: `INU NO : ${printInput.INU}`,
-                      colMd: 12,
-                      colClass: "mt5,small",
-                      align: "right"
-                    }
-                  ]
-                ],
+                text: "",
                 colMd: 3,
                 colClass: "mb5"
               },
@@ -351,150 +449,91 @@ export default {
                     ]
                   ]
                 }
-              }
-            ],
-            [
-              {
-                colGroups: [
-                  [
-                    {
-                      text: "PURCHASE ORDER (PO)",
-                      align: "center",
-                      colClass: "mb5,small"
-                    }
-                  ]
-                ],
-                colMd: 12
-              }
-            ],
-            [
-              {
-                colGroups: [
-                  [
-                    {
-                      formGroups: [
-                        [
-                          {
-                            label: "Nomor PO",
-                            labelWidth: 60,
-                            value: `: ${printInput.nomorSuratJalan}`,
-                            style: "small"
-                          },
-                          {
-                            label: "Tanggal Beli",
-                            labelWidth: 60,
-                            value: `: ${printInput.tanggal}`,
-                            style: "small"
-                          },
-                          {
-                            label: "Cash / Kredit",
-                            labelWidth: 60,
-                            value: `: ${printInput.jenisPembayaran}`,
-                            style: "small"
-                          }
-                        ]
-                      ]
-                    }
-                  ]
-                ],
-                colMd: 6
               },
               {
                 colGroups: [
                   [
                     {
-                      formGroups: [
-                        [
-                          {
-                            label: "TOP",
-                            labelWidth: 70,
-                            value: `: ${printInput.TOP}`,
-                            style: "small"
-                          },
-                          {
-                            label: "Tanggal Jatuh Tempo",
-                            labelWidth: 70,
-                            value: `: ${printInput.tanggalJatuhTempo}`,
-                            style: "small"
-                          },
-                          {
-                            label: "Status Bayar",
-                            labelWidth: 70,
-                            value: `: ${printInput.statusBayar}`,
-                            style: "small"
-                          }
-                        ]
-                      ]
+                      text: `Pangkalan Bun, ${printInput.tanggal}`,
+                      colMd: 12,
+                      colClass: "mt10,small",
+                      align: "right"
                     }
                   ]
                 ],
-                colMd: 6
-              }
-            ],
-            [
+                colClass: "mb5"
+              },
+              {
+                colGroups: [kepadaYth]
+              },
               {
                 colGroups: [
                   [
                     {
+                      text: `NPWP ${printInput.namaPT} : ${printInput.NPWP}`,
+                      colMd: 12,
+                      colClass: "mt10,bold"
+                    },
+                    {
+                      text: `IZIN NIAGA UMUM : ${printInput.INU}`,
+                      colMd: 12,
+                      colClass: "small,bold"
+                    },
+                    {
+                      text: "Dengan Hormat,",
+                      colMd: 12,
+                      colClass: "mt10"
+                    },
+                    {
+                      text: `Bersama ini kami order BBM Solar untuk kebutuhan ${
+                        printInput.namaPT
+                      } : `,
+                      colMd: 12,
+                      colClass: "mt10"
+                    },
+                    {
                       cTable: {
-                        widths: [20, 200, "*", "*", "*"],
+                        widths: [20, 200, "*", "*", "*", "*"],
                         body: tabelBarang
-                      }
-                    }
-                  ]
-                ],
-                colClass: "mt5"
-              }
-            ],
-            [
-              {
-                colGroups: [
-                  [
+                      },
+                      colMd: 12,
+                      colClass: "mt10"
+                    },
                     {
-                      cTable: {
-                        heights: [50, "*"],
-                        widths: ["*", "*"],
-                        body: [
-                          [
-                            {
-                              border: [true, true, false, false],
-                              text: "Mengetahui",
-                              alignment: "center",
-                              style: "small"
-                            },
-                            {
-                              border: [true, true, true, false],
-                              text: "Approve Oleh",
-                              alignment: "center",
-                              style: "small"
-                            }
-                          ],
-                          [
-                            {
-                              border: [true, false, false, true],
-                              text: printInput.mengetahui,
-                              alignment: "center",
-                              style: "span"
-                            },
-                            {
-                              border: [true, false, true, true],
-                              text: printInput.approveOleh,
-                              alignment: "center",
-                              style: "span"
-                            }
-                          ]
-                        ]
-                      }
+                      colGroups: [note],
+                      colMd: 12,
+                      colClass: "mt10"
+                    },
+                    {
+                      text:
+                        "Demikian PO dari kami, atas bantuan dan kerjasamanya kami ucapkan terimakasih.",
+                      colMd: 12,
+                      colClass: "mt40"
+                    },
+                    {
+                      text: "Hormat Kami,",
+                      colMd: 12,
+                      colClass: "mt30"
+                    },
+                    {
+                      text: "Alfian Rivai",
+                      colMd: 12,
+                      colClass: "bold,mt50",
+                      decoration: "underline"
+                    },
+                    {
+                      text: "Direktur",
+                      colMd: 12,
+                      colClass: ""
                     }
                   ]
-                ],
-                colClass: "mt20"
+                ]
               }
             ]
           ]
         }
       ];
-      print(exportedData, this.input.nomorSuratJalan, "landscape", "A5");
+      print(exportedData, this.input.nomorSuratJalan, "potrait", "A4");
       this.cancel();
     },
     cancel() {
@@ -517,10 +556,13 @@ export default {
       handler() {
         if (this.pembelian[0].length > 0) {
           this.input = Object.assign(this.input, {
-            tanggal: moment(this.pembelian[0][0]["tanggal"]),
-            mengetahui: this.pembelian[0][0]["mengetahui"],
-            approveOleh: this.pembelian[0][0]["approve_oleh"]
+            tanggal: moment(this.pembelian[0][0]["tanggal"])
           });
+
+          if (this.pembelian[0][0]["kepada"] == !"")
+            this.input.kepada = this.pembelian[0][0]["tanggal"];
+          if (this.pembelian[0][0]["note"] == !"")
+            this.input.kepada = this.pembelian[0][0]["note"];
         }
 
         if (this.pembelian[1].length > 0) {
@@ -528,16 +570,10 @@ export default {
         }
 
         if (this.pembelian[2].length > 0) {
-          // const alias = _.filter(this.pembelian[2], function(o) {
-          //   return o.id == "nama_alias";
-          // });
           this.settings = {};
           this.pembelian[2].forEach(item => {
             this.settings[item.id] = item.value;
           });
-          // this.input.nomorSuratJalan = `${
-          //   this.settings["nama_alias"]
-          // } - ${this.pad(this.data["id"], 6)}`;
         }
       },
       deep: true
@@ -547,7 +583,11 @@ export default {
     jumlahBayar() {
       let jumlahBayar = 0;
       if (this.inputBarang.qty != "" && this.inputBarang.harga != "") {
-        jumlahBayar = this.inputBarang.qty * this.inputBarang.harga;
+        jumlahBayar = this.inputBarang.qty * this.inputBarang.harga * 1000;
+      }
+      if (this.inputBarang.diskon != 0) {
+        jumlahBayar =
+          jumlahBayar - jumlahBayar * (this.inputBarang.diskon / 100);
       }
       return jumlahBayar;
     },

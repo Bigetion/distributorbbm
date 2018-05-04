@@ -58,7 +58,8 @@
         <v-card flat class="pa-2">
           <v-btn success @click="setIsAdd(true)">Tambah</v-btn>
           <v-btn v-if="selectedRow.length==1" primary  @click="setIsEdit(true)">Edit</v-btn>
-          <v-btn dark class="deep-orange float-right" v-if="selectedRow.length==1 && selectedRow[0]['approved']=='1'" @click="onCetak()">Cetak</v-btn>
+          <v-btn dark class="deep-orange float-right" v-if="selectedRow.length==1 && selectedRow[0]['approved']=='1'" @click="onCetakManual()">Cetak 2</v-btn>
+          <v-btn dark class="deep-orange float-right" v-if="selectedRow.length==1 && selectedRow[0]['approved']=='1'" @click="onCetak()">Cetak 1</v-btn>
           <v-btn dark class="teal float-right" v-if="selectedRow.length==1 && selectedRow[0]['approved']=='0' && user.idRole=='1'" default @click="onApprove()">Approve</v-btn>
         </v-card>
       </div>
@@ -74,6 +75,7 @@ import auth from "./../../utils/auth";
 
 import AddEditPenjualan from "./forms/AddEditPenjualan.vue";
 import FormCetakPenjualan from "./forms/FormCetakPenjualan.vue";
+import FormCetakPenjualanManual from "./forms/FormCetakPenjualanManual.vue";
 
 export default {
   components: { AddEditPenjualan },
@@ -150,6 +152,16 @@ export default {
         },
         dismissable: false,
         component: FormCetakPenjualan
+      }).then(response => {});
+    },
+    onCetakManual() {
+      modal(this, {
+        name: "full-modal",
+        props: {
+          data: this.selectedRow[0]
+        },
+        dismissable: false,
+        component: FormCetakPenjualanManual
       }).then(response => {});
     }
   },

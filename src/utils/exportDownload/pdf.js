@@ -164,6 +164,10 @@ function resolveColumn(columns) {
             alignment: alignment,
             style: colClassSplit
           };
+          if (child.decoration) {
+            content.decoration = child.decoration;
+            if (child.decorationStyle) content.decorationStyle = child.decorationStyle;
+          }
         }
         else if (child.canvas) {
           content = {
@@ -172,7 +176,9 @@ function resolveColumn(columns) {
         }
         else if (child.cTable) {
           content = {
-            table: child.cTable
+            table: child.cTable,
+            width: colWidth,
+            style: colClassSplit
           }
           if (child.cTableLayout) {
             content = Object.assign(content, {

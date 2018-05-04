@@ -10,7 +10,7 @@
     <v-flex class="mt-5">
       <v-form v-model="valid" ref="form">
         <v-card flat class="pa-4 detail" v-show="step==1">
-          <v-text-field label="Nomor Surat Jalan" name="Nomor Surat Jalan" :value="input.nomorSuratJalan" :disabled="true"></v-text-field>
+          <v-text-field label="Nomor Surat Jalan" name="Nomor Surat Jalan" v-model="input.nomorSuratJalan"></v-text-field>
           <datepicker 
             label="Tanggal" 
             name="Tanggal" 
@@ -24,9 +24,12 @@
           <v-text-field label="Mengetahui" name="Mengetahui" v-model="input.mengetahui" :error-messages="errors.collect('Mengetahui')" v-validate="'required'"></v-text-field>
         </v-card>
         <v-card flat class="pa-4" v-show="step==2">
+          <v-text-field label="No. PO" name="No. PO" v-model="input.nomorPO" :error-messages="errors.collect('No. PO')" v-validate="{required: step==2}"></v-text-field>
+          <v-text-field label="No. Surat Jalan" name="No. Surat Jalan" v-model="input.noSuratJalan" :error-messages="errors.collect('No. Surat Jalan')" v-validate="{required: step==2}"></v-text-field>
           <v-text-field label="Driver" name="Driver" v-model="input.driver" :error-messages="errors.collect('Driver')" v-validate="{required: step==2}"></v-text-field>
           <v-text-field label="Nomor Kendaraan" name="Nomor Kendaraan" v-model="input.nomorKendaraan" :error-messages="errors.collect('Nomor Kendaraan')" v-validate="{required: step==2}"></v-text-field>
           <v-text-field label="Nomor Segel Atas" name="Nomor Segel Atas" v-model="input.nomorSegelAtas" :error-messages="errors.collect('Nomor Segel Atas')" v-validate="{required: step==2}"></v-text-field>
+          <v-text-field label="Nomor Segel Tengah" name="Nomor Segel Tengah" v-model="input.nomorSegelTengah" :error-messages="errors.collect('Nomor Segel Tengah')" v-validate="{required: step==2}"></v-text-field>
           <v-text-field label="Nomor Segel Bawah" name="Nomor Segel Bawah" v-model="input.nomorSegelBawah" :error-messages="errors.collect('Nomor Segel Bawah')" v-validate="{required: step==2}"></v-text-field>
           <v-text-field label="Nama Transportir" name="Nama Transportir" v-model="input.namaTransportir" :error-messages="errors.collect('Nama Transportir')" v-validate="{required: step==2}"></v-text-field>
           <v-text-field label="Warna Segel" name="Warna Segel" v-model="input.warnaSegel" :error-messages="errors.collect('Warna Segel')" v-validate="{required: step==2}"></v-text-field>
@@ -105,12 +108,15 @@ export default {
       },
       input: {
         nomorSuratJalan: "",
+        nomorPO: "",
+        noSuratJalan: "",
         tanggal: new Date(),
         nomorContact: "",
         mengetahui: "",
         driver: "",
         nomorKendaraan: "",
         nomorSegelAtas: "",
+        nomorSegelTengah: "",
         nomorSegelBawah: "",
         namaTransportir: "",
         warnaSegel: ""
@@ -143,7 +149,6 @@ export default {
             const data = {
               id_penjualan: this.data["id"],
               tanggal: moment(this.input.tanggal).format("YYYY-MM-DD"),
-              nomor_surat_jalan: this.input.nomorSuratJalan,
               contact: this.input.nomorContact,
               mengetahui: this.input.mengetahui
             };
@@ -169,9 +174,12 @@ export default {
 
           if (this.step == 2) {
             const data = {
+              nomor_po: this.input.nomorPO,
+              no_surat_jalan: this.input.noSuratJalan,
               driver: this.input.driver,
               nomor_kendaraan: this.input.nomorKendaraan,
               nomor_segel_atas: this.input.nomorSegelAtas,
+              nomor_segel_tengah: this.input.nomorSegelTengah,
               nomor_segel_bawah: this.input.nomorSegelBawah,
               nama_transportir: this.input.namaTransportir,
               warna_segel: this.input.warnaSegel
@@ -245,16 +253,18 @@ export default {
         lambang: this.lambangBase64,
         namaPT: this.settings.nama_pt,
         alamatPT: this.settings.alamat,
-        // nomorTeleponPT: "0532-2031746",
         NPWP: this.settings.npwp,
         INU: this.settings.inu,
         aliasPT: this.settings.nama_alias,
         nomorSuratJalan: this.input.nomorSuratJalan,
+        nomorPO: this.input.nomorPO,
+        noSuratJalan: this.input.noSuratJalan,
         tanggal: moment(this.input.tanggal).format("DD MMMM YYYY"),
         customerName: this.data["nama"],
         contactPerson: this.input.nomorContact,
         nomorKendaraan: this.input.nomorKendaraan,
         nomorSegelAtas: this.input.nomorSegelAtas,
+        nomorSegelTengah: this.input.nomorSegelTengah,
         nomorSegelBawah: this.input.nomorSegelBawah,
         namaTransportasi: this.input.namaTransportir,
         warnaSegel: this.input.warnaSegel,
@@ -451,9 +461,16 @@ export default {
                             style: "small"
                           },
                           {
-                            label: " ",
+                            label: "No. PO",
                             labelWidth: 60,
-                            value: " "
+                            value: `: ${printInput.nomorPO}`,
+                            style: "small"
+                          },
+                          {
+                            label: "No. Surat Jalan",
+                            labelWidth: 60,
+                            value: `: ${printInput.noSuratJalan}`,
+                            style: "small"
                           },
                           {
                             label: "Contact Person",
@@ -484,6 +501,12 @@ export default {
                             label: "Nomor Segel Atas",
                             labelWidth: 70,
                             value: `: ${printInput.nomorSegelAtas}`,
+                            style: "small"
+                          },
+                          {
+                            label: "Nomor Segel Tengah",
+                            labelWidth: 70,
+                            value: `: ${printInput.nomorSegelTengah}`,
                             style: "small"
                           },
                           {
@@ -690,12 +713,15 @@ export default {
       handler() {
         if (this.penjualan[0].length > 0) {
           this.input = Object.assign(this.input, {
+            nomorPO: this.penjualan[0][0]["nomor_po"],
+            noSuratJalan: this.penjualan[0][0]["no_surat_jalan"],
             tanggal: moment(this.penjualan[0][0]["tanggal"]),
             nomorContact: this.penjualan[0][0]["contact"],
             mengetahui: this.penjualan[0][0]["mengetahui"],
             driver: this.penjualan[0][0]["driver"],
             nomorKendaraan: this.penjualan[0][0]["nomor_kendaraan"],
             nomorSegelAtas: this.penjualan[0][0]["nomor_segel_atas"],
+            nomorSegelTengah: this.penjualan[0][0]["nomor_segel_tengah"],
             nomorSegelBawah: this.penjualan[0][0]["nomor_segel_bawah"],
             namaTransportir: this.penjualan[0][0]["nama_transportir"],
             warnaSegel: this.penjualan[0][0]["warna_segel"]
@@ -707,16 +733,10 @@ export default {
         }
 
         if (this.penjualan[2].length > 0) {
-          // const alias = _.filter(this.penjualan[2], function(o) {
-          //   return o.id == "nama_alias";
-          // });
           this.settings = {};
           this.penjualan[2].forEach(item => {
             this.settings[item.id] = item.value;
           });
-          // this.input.nomorSuratJalan = `${
-          //   this.settings["nama_alias"]
-          // } - ${this.pad(this.data["id"], 6)}`;
         }
       },
       deep: true

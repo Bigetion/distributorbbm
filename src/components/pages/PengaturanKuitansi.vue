@@ -13,10 +13,10 @@
             <v-text-field label="INU" name="INU" v-model="input.inu" :error-messages="errors.collect('INU')" v-validate="'required'" :disabled="!state.isEdit"></v-text-field>
           </v-flex>
           <v-flex md6 class="px-2">
-            <v-text-field label="Alamat" name="Alamat" v-model="input.alamat" :error-messages="errors.collect('Alamat')" v-validate="'required'" :disabled="!state.isEdit"></v-text-field>
-          </v-flex>
-          <v-flex md6 class="px-2">
             <v-text-field label="Nama Alias" name="Nama Alias" v-model="input.nama_alias" :error-messages="errors.collect('Nama Alias')" v-validate="'required'" :disabled="!state.isEdit"></v-text-field>
+          </v-flex>
+          <v-flex md12 class="px-2">
+            <v-text-field label="Alamat" name="Alamat" v-model="input.alamat" :error-messages="errors.collect('Alamat')" v-validate="'required'" :disabled="!state.isEdit" multi-line></v-text-field>
           </v-flex>
           <v-flex md6>
             <div class="px-2">
