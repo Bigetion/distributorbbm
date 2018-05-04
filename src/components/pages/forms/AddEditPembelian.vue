@@ -55,7 +55,7 @@
                 :customStrings="{
                   drag: 'Upload File PO'
                 }"
-                :prefill="`${baseUrl}${input.nomorPO}`"
+                :prefill="`${baseUrl}${data['id']}`"
                 :prefillOptions="{
                   fileType: 'jpg',
                   mediaType: 'image/png'
@@ -132,7 +132,7 @@ export default {
                       {
                         path: "filePO",
                         base64: this.filePO,
-                        name: this.input.nomorPO
+                        name: this.isEdit ? this.data["id"] : response.data.id
                       }
                     ]
                   });
@@ -183,7 +183,7 @@ export default {
     },
     pembelianParams() {
       let params = {
-        id: undefined,
+        id: this.isEdit ? this.data["id"] : undefined,
         type: this.mutationType,
         name: "pembelian",
         data: this.pembelianData

@@ -43,7 +43,7 @@
         <v-card flat>
           <div v-if="selectedRow.length==1">
             <div class="view-images" v-viewer v-show="false">
-              <img :src="`${baseURL}${this.selectedRow[0]['nomor_po']}`">
+              <img :src="`${baseURL}${this.selectedRow[0]['id']}`">
             </div>
           </div>
           <v-layout row wrap>
