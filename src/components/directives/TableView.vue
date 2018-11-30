@@ -29,7 +29,7 @@
     <v-layout row wrap class="mt-2" v-show="totalRows > pagination.rowsPerPage">
       <v-flex xs12 md9>
         <div class="py-3">
-          <v-pagination v-model="pagination.page" :length="pages" :total-visible="10"></v-pagination>
+          <v-pagination v-model="pagination.page" :length="pages" :total-visible="10" circle></v-pagination>
         </div>
       </v-flex>
       <v-flex xs12 md3>

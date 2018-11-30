@@ -4,6 +4,11 @@ module.exports = {
     "plugin:vue/strongly-recommended"
   ],
   rules: {
-    'vue/no-unused-vars': 'error'
+    'vue/no-unused-vars': 'error',
+    'no-console': 'off',
+  },
+  env: {
+    'node': true,
+    'commonjs': true
   }
 }

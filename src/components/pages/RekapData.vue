@@ -21,20 +21,30 @@
           </v-tabs-bar>
           <v-tabs-items>
             <v-tabs-content key="penjualan" id="penjualan">
-              <table-view 
+              <table-view
+                class="elevation-0 mb-4"
                 from-file="penjualan" 
                 :extra-query-options="extraQueryOptionsPenjualan" 
                 :get-columns="getColumnsPenjualan" 
                 :get-total-rows="getTotalRowsPenjualan"
               ></table-view>
+              <div class="px-2">
+                <p>Total QTY : <span class="bold">{{penjualan.qty}} KL</span></p>
+                <p>Total Penjualan : <span class="bold">{{penjualan.total}}</span></p>
+              </div>
             </v-tabs-content>
             <v-tabs-content key="pembelian" id="pembelian">
               <table-view 
+                class="elevation-0 mb-4"
                 from-file="pembelian" 
                 :extra-query-options="extraQueryOptionsPembelian" 
                 :get-columns="getColumnsPembelian"
                 :get-total-rows="getTotalRowsPembelian"
               ></table-view>
+              <div class="px-2">
+                <p>Total QTY : <span class="bold">{{pembelian.qty}} KL</span></p>
+                <p>Total Pembelian : <span class="bold">{{pembelian.total}}</span></p>
+              </div>
             </v-tabs-content>
           </v-tabs-items>
         </v-tabs>
@@ -42,10 +52,12 @@
         <v-btn v-show="activeTab=='pembelian'&&totalRowsPembelian>0" success class="btn-row mt-3" @click="exportExcel()">Eksport Excel</v-btn>
       </v-card>
     </div>
+    <query-service v-model="rekap" from-file="rekap" :extra-query-options="extraQueryOptions"></query-service>
   </div>
 </template>
 
 <script>
+import moment from "moment";
 import { excel } from "./../../utils/exportDownload";
 export default {
   data: () => ({
@@ -59,10 +71,23 @@ export default {
     columnsPenjualan: [],
     columnsPembelian: [],
     totalRowsPenjualan: 0,
-    totalRowsPembelian: 0
+    totalRowsPembelian: 0,
+    penjualan: {
+      qty: 0,
+      total: 0
+    },
+    pembelian: {
+      qty: 0,
+      total: 0
+    },
+    rekap: []
   }),
   created() {},
   methods: {
+    formatCurrency(value) {
+      let val = (value / 1).toFixed(0).replace(".", ",");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    },
     filter() {
       this.fromDate = this.filterDate.from;
       this.toDate = this.filterDate.to;
@@ -108,6 +133,27 @@ export default {
     }
   },
   computed: {
+    extraQueryOptions() {
+      let where = [
+        {
+          where:
+            "tanggal_pembelian between '" +
+            moment(this.fromDate).format("YYYY-MM-DD") +
+            "' and '" +
+            moment(this.toDate).format("YYYY-MM-DD") +
+            "'"
+        },
+        {
+          where:
+            "tanggal_penjualan between '" +
+            moment(this.fromDate).format("YYYY-MM-DD") +
+            "' and '" +
+            moment(this.toDate).format("YYYY-MM-DD") +
+            "'"
+        }
+      ];
+      return where;
+    },
     extraQueryOptionsPenjualan() {
       let extraQueryOptions = false;
       if (this.fromDate != "") {
@@ -145,6 +191,21 @@ export default {
         });
       });
       return fields;
+    }
+  },
+  watch: {
+    rekap: {
+      handler() {
+        this.pembelian = {
+          qty: this.rekap[0][0]["qty"] || 0,
+          total: this.formatCurrency(this.rekap[0][0]["total"] || 0)
+        };
+        this.penjualan = {
+          qty: this.rekap[1][0]["qty"] || 0,
+          total: this.formatCurrency(this.rekap[1][0]["total"] || 0)
+        };
+      },
+      deep: true
     }
   }
 };

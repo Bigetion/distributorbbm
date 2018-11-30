@@ -197,6 +197,10 @@ html {
   overflow: auto !important;
 }
 
+.application--light {
+  background-color: #ffffff !important;
+}
+
 .toolbar__items .active-menu-header {
   background: #3949a3 !important;
 }

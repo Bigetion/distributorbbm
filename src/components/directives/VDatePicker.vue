@@ -101,6 +101,7 @@ export default {
   position: relative !important;
 }
 .v-datepicker .mx-input {
+  font-family: 'Roboto', sans-serif !important;
   padding: 10px 30px 6px 0px !important;
 }
 .v-datepicker-error ::placeholder {
@@ -112,5 +113,11 @@ export default {
   top: 0;
   z-index: 2 !important;
   margin-top: -12px !important;
+}
+.mx-datepicker-popup {
+  font-family: 'Roboto', sans-serif !important;
+}
+.mx-datepicker-top {
+  display: none !important;
 }
 </style>

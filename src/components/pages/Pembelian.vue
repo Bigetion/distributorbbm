@@ -16,7 +16,7 @@
       <div v-show="!(state.isAdd || state.isEdit)">
         <v-card flat class="pt-3 px-2">
           <v-layout row wrap>
-            <v-flex md4 class="px-2">
+            <v-flex md4 xs12 class="px-2">
               <vdatepicker 
                 :editable="true" 
                 label="Tanggal Jatuh Tempo" 
@@ -24,7 +24,7 @@
                 :range="true"
               ></vdatepicker>
             </v-flex>
-            <v-flex md4 class="px-2">
+            <v-flex md4 xs12 class="px-2">
               <v-select
                 multiple
                 :items="['OK', 'Not OK']"
@@ -32,7 +32,7 @@
                 label="Approved Owner"
               ></v-select>
             </v-flex>
-            <v-flex md4 class="px-2">
+            <v-flex md4 xs12 class="px-2">
               <v-text-field label="Status Bayar" v-model="filterInput.statusBayar"></v-text-field>
             </v-flex>
           </v-layout>
@@ -65,7 +65,8 @@
           <v-btn success @click="setIsAdd(true)">Tambah</v-btn>
           <v-btn v-if="selectedRow.length==1" primary  @click="setIsEdit(true)">Edit</v-btn>
           <v-btn dark class="cyan float-right" v-if="selectedRow.length==1" @click="showFilePO()">File PO</v-btn>
-          <v-btn dark class="deep-orange float-right" v-if="selectedRow.length==1 && selectedRow[0]['approved']=='1'" @click="onCetak()">Cetak</v-btn>
+          <v-btn dark class="deep-orange float-right" v-if="selectedRow.length==1 && selectedRow[0]['approved']=='1'" @click="onCetakPembelianBombas()">Cetak</v-btn>
+          <!-- <v-btn dark class="deep-orange float-right" v-if="selectedRow.length==1 && selectedRow[0]['approved']=='1'" @click="onCetakPembelianKSE()">Cetak</v-btn> -->
           <v-btn dark class="teal float-right" v-if="selectedRow.length==1 && selectedRow[0]['approved']=='0' && user.idRole=='1'" default @click="onApprove()">Approve</v-btn>
         </v-card>
       </div>
@@ -81,6 +82,7 @@ import auth from "./../../utils/auth";
 
 import AddEditPembelian from "./forms/AddEditPembelian.vue";
 import FormCetakPembelian from "./forms/FormCetakPembelian.vue";
+import FormCetakPembelianBombas from "./forms/FormCetakPembelianBombas.vue";
 
 export default {
   components: { AddEditPembelian },
@@ -154,7 +156,7 @@ export default {
           });
       });
     },
-    onCetak() {
+    onCetakPembelianKSE() {
       modal(this, {
         name: "full-modal",
         props: {
@@ -162,6 +164,16 @@ export default {
         },
         dismissable: false,
         component: FormCetakPembelian
+      }).then(response => {});
+    },
+    onCetakPembelianBombas() {
+      modal(this, {
+        name: "full-modal",
+        props: {
+          data: this.selectedRow[0]
+        },
+        dismissable: false,
+        component: FormCetakPembelianBombas
       }).then(response => {});
     }
   },

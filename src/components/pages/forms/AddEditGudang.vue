@@ -38,7 +38,7 @@
               label="Nomor Referensi"
               name="Nomor Referensi"
             ></v-select> -->
-            <select-view 
+            <!-- <select-view 
               placeholder="Nomor Referensi" 
               :options="nomorReferensiOptions"
               v-model="input.nomorReferensi" 
@@ -46,8 +46,8 @@
               :searchable="true"
               track-by="id"
               label="value"
-            ></select-view>
-            <!-- <v-text-field label="Nomor Referensi" name="Nomor Referensi" v-model="input.nomorReferensi" :error-messages="errors.collect('Nomor Referensi')" v-validate="''"></v-text-field> -->
+            ></select-view> -->
+            <v-text-field label="Nomor Referensi" name="Nomor Referensi" v-model="input.nomorReferensi" :error-messages="errors.collect('Nomor Referensi')" v-validate="''"></v-text-field>
           </v-flex>
           <v-flex md12 class="px-2">
             <v-text-field label="Keterangan" name="Keterangan" v-model="input.keterangan" :error-messages="errors.collect('Keterangan')" v-validate="''" multi-line></v-text-field>

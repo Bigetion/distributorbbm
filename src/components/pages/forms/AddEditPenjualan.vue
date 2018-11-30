@@ -29,7 +29,7 @@
             <v-text-field label="Status Bayar" name="Status Bayar" v-model="input.statusBayar" :error-messages="errors.collect('Status Bayar')" v-validate="'required'"></v-text-field>
           </v-flex>
           <v-flex md6 class="px-2">
-            <v-text-field label="QTY (Kiloliter)" name="QTY" v-model="input.qty" :error-messages="errors.collect('QTY')" v-validate="'required'"></v-text-field>
+            <v-text-field label="QTY (Liter)" name="QTY" v-model="input.qty" :error-messages="errors.collect('QTY')" v-validate="'required'"></v-text-field>
           </v-flex>
           <v-flex md6 class="px-2">
             <v-text-field label="Harga / Liter" name="Harga" v-model="input.harga" :error-messages="errors.collect('Harga')" v-validate="'required'"></v-text-field>

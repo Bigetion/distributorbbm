@@ -285,32 +285,32 @@ export default {
           {
             text: "No",
             alignment: "center",
-            style: "small"
+            style: ""
           },
           {
             text: "Nama Barang",
             alignment: "center",
-            style: "small"
+            style: ""
           },
           {
             text: "Kwantitas/Satuan (LTR)",
             alignment: "center",
-            style: "small"
+            style: ""
           },
           {
             text: "SG",
             alignment: "center",
-            style: "small"
+            style: ""
           },
           {
             text: "Temperatur",
             alignment: "center",
-            style: "small"
+            style: ""
           },
           {
             text: "Tinggi Cairan",
             alignment: "center",
-            style: "small"
+            style: ""
           }
         ]
       ];
@@ -319,32 +319,32 @@ export default {
           {
             text: index + 1,
             alignment: "center",
-            style: "small"
+            style: ""
           },
           {
             text: item.nama_barang,
             alignment: "center",
-            style: "small"
+            style: ""
           },
           {
             text: this.formatCurrency(item.qty),
             alignment: "center",
-            style: "small"
+            style: ""
           },
           {
             text: item.sg,
             alignment: "center",
-            style: "small"
+            style: ""
           },
           {
             text: item.temperatur,
             alignment: "center",
-            style: "small"
+            style: ""
           },
           {
             text: item.tinggi_cairan,
             alignment: "center",
-            style: "small"
+            style: ""
           }
         ]);
       });
@@ -376,13 +376,13 @@ export default {
                     {
                       text: `NPWP ${printInput.aliasPT} : ${printInput.NPWP}`,
                       colMd: 12,
-                      colClass: "mt10,small",
+                      colClass: "mt10,f8",
                       align: "right"
                     },
                     {
                       text: `INU NO : ${printInput.INU}`,
                       colMd: 12,
-                      colClass: "mt5,small",
+                      colClass: "mt5,f8",
                       align: "right"
                     }
                   ]
@@ -413,12 +413,13 @@ export default {
                     {
                       text: "SURAT JALAN",
                       align: "center",
-                      colClass: "h5,mt10,mb5,p"
+                      colClass: "f11,mt5",
+                      decoration: "underline"
                     },
                     {
                       text: "DELIVERY ORDER (DO)",
                       align: "center",
-                      colClass: "mb5,small"
+                      colClass: "small"
                     }
                   ]
                 ],
@@ -434,32 +435,32 @@ export default {
                         [
                           {
                             label: "Nomor Surat Jalan",
-                            labelWidth: 60,
+                            labelWidth: 90,
                             value: `: ${printInput.nomorSuratJalan}`,
-                            style: "small"
+                            style: "f9"
                           },
                           {
                             label: "Tanggal",
-                            labelWidth: 60,
+                            labelWidth: 90,
                             value: `: ${printInput.tanggal}`,
-                            style: "small"
+                            style: "f9"
                           },
                           {
                             label: "Kepada Yth./ To",
-                            labelWidth: 60,
+                            labelWidth: 90,
                             value: `: ${printInput.customerName}`,
-                            style: "small"
+                            style: "f9"
                           },
                           {
                             label: " ",
-                            labelWidth: 60,
+                            labelWidth: 90,
                             value: " "
                           },
                           {
                             label: "Contact Person",
-                            labelWidth: 60,
+                            labelWidth: 90,
                             value: `: ${printInput.contactPerson}`,
-                            style: "small"
+                            style: "f9"
                           }
                         ]
                       ]
@@ -476,33 +477,33 @@ export default {
                         [
                           {
                             label: "Nomor Kendaraan",
-                            labelWidth: 70,
+                            labelWidth: 90,
                             value: `: ${printInput.nomorKendaraan}`,
-                            style: "small"
+                            style: "f9"
                           },
                           {
                             label: "Nomor Segel Atas",
-                            labelWidth: 70,
+                            labelWidth: 90,
                             value: `: ${printInput.nomorSegelAtas}`,
-                            style: "small"
+                            style: "f9"
                           },
                           {
                             label: "Nomor Segel Bawah",
-                            labelWidth: 70,
+                            labelWidth: 90,
                             value: `: ${printInput.nomorSegelBawah}`,
-                            style: "small"
+                            style: "f9"
                           },
                           {
                             label: "Nama Transportasi",
-                            labelWidth: 70,
+                            labelWidth: 90,
                             value: `: ${printInput.namaTransportasi}`,
-                            style: "small"
+                            style: "f9"
                           },
                           {
                             label: "Warna Segel",
-                            labelWidth: 70,
+                            labelWidth: 90,
                             value: `: ${printInput.warnaSegel}`,
-                            style: "small"
+                            style: "f9"
                           }
                         ]
                       ]
@@ -524,7 +525,7 @@ export default {
                     }
                   ]
                 ],
-                colClass: "mt5"
+                colClass: "mt10"
               }
             ],
             [
@@ -533,7 +534,7 @@ export default {
                   [
                     {
                       cTable: {
-                        heights: [30, "*", "*"],
+                        heights: [40, "*", "*"],
                         widths: ["*", "*", "*"],
                         body: [
                           [
@@ -601,7 +602,7 @@ export default {
                     }
                   ]
                 ],
-                colClass: "mt5"
+                colClass: ""
               }
             ],
             [
@@ -610,58 +611,58 @@ export default {
                   [
                     {
                       text: "Perhatian :",
-                      colClass: "small"
+                      colClass: "f8"
                     },
                     {
                       text:
                         "Sebelum barang diterima dan dibongkar harap BBM HSD diperiksa dengan teliti dan seksama",
-                      colClass: "small"
+                      colClass: "f8"
                     },
                     {
                       text:
                         "barang yang sudah diterima tidak dapat dikembalikan/dikomplain",
-                      colClass: "small"
+                      colClass: "f8"
                     },
                     {
                       text: "Diterima dalam keadaan cukup dan murni",
-                      colClass: "small"
+                      colClass: "f8"
                     },
                     {
                       text: "Accept",
-                      colClass: "small"
+                      colClass: "f8"
                     }
                   ]
                 ],
-                colClass: "mt5"
+                colClass: "mt10,mb10"
               },
               {
                 colGroups: [
                   [
                     {
                       text: "Keterangan :",
-                      colClass: "small"
+                      colClass: "f8"
                     },
                     {
                       text: `1. Lembar pertama warna putih / asli untuk ${
                         printInput.aliasPT
                       }`,
-                      colClass: "small"
+                      colClass: "f8"
                     },
                     {
                       text: "2. Lembar kedua warna merah untuk Customer",
-                      colClass: "small"
+                      colClass: "f8"
                     },
                     {
                       text: "3. Lembar ketiga warna kuning untuk Driver",
-                      colClass: "small"
+                      colClass: "f8"
                     },
                     {
                       text: "4. Lembar keempat warna hijau untuk Pengawas",
-                      colClass: "small"
+                      colClass: "f8"
                     }
                   ]
                 ],
-                colClass: "mt10"
+                colClass: ""
               }
             ]
           ]

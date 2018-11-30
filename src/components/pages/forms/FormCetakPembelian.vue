@@ -20,6 +20,7 @@
             value-format="DD MMMM YYYY"
             :z-index="1099"
           ></datepicker>
+          <v-text-field label="PbbKB" name="PbbKB" v-model="input.pbbkb" :error-messages="errors.collect('PbbKB')" v-validate="'required|decimal'"></v-text-field>
           <v-text-field label="Kepada Yth." name="Kepada" v-model="input.kepada" :error-messages="errors.collect('Kepada')" v-validate="'required'" multi-line></v-text-field>
           <v-text-field label="Note" name="Note" v-model="input.note" :error-messages="errors.collect('Note')" v-validate="'required'" multi-line :rows="8"></v-text-field>
         </v-card>
@@ -101,7 +102,8 @@ export default {
         kepada:
           "PT. PERTAMINA PATRA NIAGA\nGedung Wisma Tugu II, 2nd Floor, Jl. HR. Rasuna Said\nKav C7-9, Kuningan - Daerah Khusu Ibukota Jakarta\nUp. Bp. Zuhdy Munthaha",
         note:
-          "1. Customer          : PT. Kalimantan Sumber Energi\n2. Pembayaran     : Bank Garansi\n3. Suplly Point      : TBBM SAMPIT\n4. TOP                    : 45 Hari\n5. LO                       : 5 KL\n6. SP                       : 896814\n7. SH                       : 906292 "
+          "1. Customer          : PT. Kalimantan Sumber Energi\n2. Pembayaran     : Bank Garansi\n3. Suplly Point      : TBBM SAMPIT\n4. TOP                    : 45 Hari\n5. LO                       : 5 KL\n6. SP                       : 896814\n7. SH                       : 906292 ",
+        pbbkb: 0
       },
       inputBarang: {
         namaBarang: "",
@@ -131,7 +133,8 @@ export default {
               id_pembelian: this.data["id"],
               tanggal: moment(this.input.tanggal).format("YYYY-MM-DD"),
               kepada: this.input.kepada,
-              note: this.input.note
+              note: this.input.note,
+              pbbkb: this.input.pbbkb
             };
             if (this.pembelian[0].length == 0) {
               this.$http
@@ -226,6 +229,7 @@ export default {
         statusBayar: this.data["status_bayar"],
         kepada: this.input.kepada,
         note: this.input.note,
+        pbbkb: this.input.pbbkb,
         ttd: this.ttdBase64
       };
 
@@ -243,7 +247,7 @@ export default {
         header.push({
           text: item,
           align: "center",
-          colClass: "small,mt5"
+          colClass: "small,mt5,f11"
         });
       });
 
@@ -251,12 +255,12 @@ export default {
         {
           text: `Nomor PO : ${printInput.nomorSuratJalan}`,
           colMd: 12,
-          colClass: ""
+          colClass: "f11"
         },
         {
           text: "Kepada Yth.",
           colMd: 12,
-          colClass: "mt15"
+          colClass: "mt15,f11"
         }
       ];
       let kepadaSplit = printInput.kepada.split(/\r?\n/);
@@ -265,7 +269,7 @@ export default {
         kepadaYth.push({
           text: item,
           align: "left",
-          colClass: ""
+          colClass: "f11"
         });
       });
 
@@ -273,7 +277,7 @@ export default {
         {
           text: "NOTE :",
           colMd: 12,
-          colClass: "bold"
+          colClass: "bold,f11"
         }
       ];
       let noteSplit = printInput.note.split(/\r?\n/);
@@ -281,7 +285,7 @@ export default {
       noteSplit.forEach(item => {
         note.push({
           text: item,
-          colClass: "bold"
+          colClass: "bold,f11"
         });
       });
 
@@ -290,37 +294,39 @@ export default {
           {
             text: "No",
             alignment: "center",
-            style: "bold,small"
+            style: "bold"
           },
           {
             text: "Jenis BBM",
             alignment: "center",
-            style: "bold,small"
+            style: "bold"
           },
           {
             text: "QTY",
             alignment: "center",
-            style: "bold,small"
+            style: "bold"
           },
           {
             text: "Harga",
             alignment: "center",
-            style: "bold,small"
+            style: "bold"
           },
           {
             text: "Discount",
             alignment: "center",
-            style: "bold,small"
+            style: "bold"
           },
           {
             text: "Jumlah",
             alignment: "center",
-            style: "bold,small"
+            style: "bold"
           }
         ]
       ];
+      let total = 0;
       let totalBayar = 0;
       this.barang.forEach((item, index) => {
+        total += parseFloat(item.total);
         totalBayar += parseFloat(item.total);
         const totalPPN = parseFloat(item.total) * 0.1;
         totalBayar += parseFloat(totalPPN);
@@ -328,73 +334,93 @@ export default {
           {
             text: index + 1,
             alignment: "center",
-            style: "small"
+            style: "f9"
           },
           {
             text: item.nama_barang,
             alignment: "left",
-            style: "small"
+            style: "f9"
           },
           {
             text: item.qty,
             alignment: "center",
-            style: "small"
+            style: "f9"
           },
           {
             text: this.formatCurrency(item.harga),
             alignment: "center",
-            style: "small"
+            style: "f9"
           },
           {
             text: `${item.diskon}%`,
             alignment: "center",
-            style: "small"
+            style: "f9"
           },
           {
             text: this.formatCurrency(item.total),
             alignment: "right",
-            style: "small"
+            style: "f9"
           }
         ]);
         tabelBarang.push([
           {
             text: "",
             alignment: "center",
-            style: "small"
+            style: "f9"
           },
           {
             text: "PPN 10%",
             alignment: "left",
-            style: "small"
+            style: "f9"
           },
           {
             text: "",
             alignment: "center",
-            style: "small"
+            style: "f9"
           },
           {
             text: "",
             alignment: "center",
-            style: "small"
+            style: "f9"
           },
           {
             text: "",
             alignment: "center",
-            style: "small"
+            style: "f9"
           },
           {
             text: this.formatCurrency(totalPPN),
             alignment: "right",
-            style: "small"
+            style: "f9"
           }
         ]);
       });
 
+      const totalPbbKB = parseFloat(total) * parseFloat(parseFloat(printInput.pbbkb)/100);
+      totalBayar += parseFloat(totalPbbKB);
+      tabelBarang.push([
+        {
+          text: `PbbKB ${printInput.pbbkb}%`,
+          alignment: "left",
+          style: "f9",
+          colSpan: 5
+        },
+        {},
+        {},
+        {},
+        {},
+        {
+          text: this.formatCurrency(totalPbbKB),
+          alignment: "right",
+          style: "f9"
+        }
+      ]);
+      
       tabelBarang.push([
         {
           text: "Total",
           alignment: "left",
-          style: ["small", "bold"],
+          style: ["f9", "bold"],
           colSpan: 5
         },
         {},
@@ -404,7 +430,7 @@ export default {
         {
           text: this.formatCurrency(totalBayar),
           alignment: "right",
-          style: ["small", "bold"]
+          style: ["f10", "bold"]
         }
       ]);
 
@@ -456,7 +482,7 @@ export default {
                     {
                       text: `Pangkalan Bun, ${printInput.tanggal}`,
                       colMd: 12,
-                      colClass: "mt10,small",
+                      colClass: "mt10,f10",
                       align: "right"
                     }
                   ]
@@ -472,24 +498,24 @@ export default {
                     {
                       text: `NPWP ${printInput.namaPT} : ${printInput.NPWP}`,
                       colMd: 12,
-                      colClass: "mt10,bold"
+                      colClass: "mt10,bold,f11"
                     },
                     {
                       text: `IZIN NIAGA UMUM : ${printInput.INU}`,
                       colMd: 12,
-                      colClass: "small,bold"
+                      colClass: "f11,bold"
                     },
                     {
                       text: "Dengan Hormat,",
                       colMd: 12,
-                      colClass: "mt10"
+                      colClass: "mt10,f11"
                     },
                     {
                       text: `Bersama ini kami order BBM Solar untuk kebutuhan ${
                         printInput.namaPT
                       } : `,
                       colMd: 12,
-                      colClass: "mt10"
+                      colClass: "mt10,f11"
                     },
                     {
                       cTable: {
@@ -508,23 +534,23 @@ export default {
                       text:
                         "Demikian PO dari kami, atas bantuan dan kerjasamanya kami ucapkan terimakasih.",
                       colMd: 12,
-                      colClass: "mt40"
+                      colClass: "mt40,f11"
                     },
                     {
                       text: "Hormat Kami,",
                       colMd: 12,
-                      colClass: "mt30"
+                      colClass: "mt30,f11"
                     },
                     {
                       text: "Alfian Rivai",
                       colMd: 12,
-                      colClass: "bold,mt50",
+                      colClass: "bold,mt50,f11",
                       decoration: "underline"
                     },
                     {
                       text: "Direktur",
                       colMd: 12,
-                      colClass: ""
+                      colClass: "f11"
                     }
                   ]
                 ]
@@ -559,10 +585,12 @@ export default {
             tanggal: moment(this.pembelian[0][0]["tanggal"])
           });
 
-          if (this.pembelian[0][0]["kepada"] == !"")
-            this.input.kepada = this.pembelian[0][0]["tanggal"];
-          if (this.pembelian[0][0]["note"] == !"")
-            this.input.kepada = this.pembelian[0][0]["note"];
+          if (this.pembelian[0][0]["kepada"] != "")
+            this.input.kepada = this.pembelian[0][0]["kepada"];
+          if (this.pembelian[0][0]["note"] != "")
+            this.input.note = this.pembelian[0][0]["note"];
+          if (this.pembelian[0][0]["pbbkb"] != 0)
+            this.input.pbbkb = this.pembelian[0][0]["pbbkb"];
         }
 
         if (this.pembelian[1].length > 0) {
@@ -601,6 +629,9 @@ export default {
         },
         {
           id_pembelian: this.data["id"]
+        },
+        {
+          "id[!]": "-1"
         },
         {
           "id[!]": "-1"

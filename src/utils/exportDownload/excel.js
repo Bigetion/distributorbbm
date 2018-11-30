@@ -238,7 +238,7 @@ function resolveColGroup(columns) {
 function resolveContent(content) {
   let result = [];
   
-  content.forEach(function(val, key){
+  content.forEach(function(val){
     result = result.concat(resolveChildContent(val));
   })
 

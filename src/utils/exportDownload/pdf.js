@@ -832,6 +832,199 @@ function getMargin(tType, tMargin) {
 }
 
 pdf.generateDocDefinition = function (content, filename, orientation, pageSize) {
+  let styles = {
+    header: {
+      fontSize: 16,
+      bold: true,
+      margin: [0, 0, 0, 0]
+    },
+    subHeader: {
+      fontSize: 12,
+      bold: false,
+      margin: [0, 5, 0, 5]
+    },
+    table: {
+      fontSize: 8,
+      margin: [5, 0, 5, 5]
+    },
+    tableHeader: {
+      bold: true,
+      fontSize: 9,
+      color: '#000000',
+      fillColor: '#ebebeb',
+      margin: [3, 2, 3, 2]
+    },
+    tableSubHeader: {
+      fontSize: 9,
+      color: '#000000',
+      fillColor: '#ebebeb',
+      margin: [3, 2, 3, 2]
+    },
+    tableBody: {
+      fontSize: 9,
+      margin: [3, 2, 3, 2]
+    },
+    footer: {
+      margin: [20, 20, 20, 20],
+      fontSize: 8,
+      alignment: 'right'
+    },
+    container: {
+      fontSize: 9,
+      margin: [0, 5, 0, 10]
+    },
+    formGroup: {
+      fontSize: 9,
+      margin: [0, 3, 0, 3]
+    },
+    value: {
+      bold: true
+    },
+    h1: {
+      fontSize: 32
+    },
+    h2: {
+      fontSize: 24
+    },
+    h3: {
+      fontSize: 19
+    },
+    h4: {
+      fontSize: 16
+    },
+    h5: {
+      fontSize: 14
+    },
+    h6: {
+      fontSize: 13
+    },
+    p: {
+      fontSize: 9,
+      margin: [0, 4, 0, 0]
+    },
+    span: {
+      fontSize: 9
+    },
+    small: {
+      fontSize: 7
+    },
+    helper: {
+      fontSize: 8,
+      color: '#666666'
+    },
+    bold: {
+      bold: true
+    },
+    left: {
+      alignment: 'left'
+    },
+    right: {
+      alignment: 'right'
+    },
+    success: {
+      color: '#5DAF50'
+    },
+    error: {
+      color: '#F44A36'
+    },
+    colBreak: {
+      margin: [0, 0, 0, 5]
+    },
+    checkbox: {
+      margin: [0, 2, 3, 0]
+    },
+    checkboxLabel: {
+      margin: [0, 2, 0, 0]
+    },
+    ma0: getMargin('a', 0),
+    ma5: getMargin('a', 5),
+    ma10: getMargin('a', 10),
+    ma15: getMargin('a', 15),
+    ma20: getMargin('a', 20),
+    ma25: getMargin('a', 25),
+    ma30: getMargin('a', 30),
+    ma35: getMargin('a', 35),
+    ma40: getMargin('a', 40),
+    ma45: getMargin('a', 45),
+    ma50: getMargin('a', 50),
+
+    mt0: getMargin('t', 0),
+    mt5: getMargin('t', 5),
+    mt10: getMargin('t', 10),
+    mt15: getMargin('t', 15),
+    mt20: getMargin('t', 20),
+    mt25: getMargin('t', 25),
+    mt30: getMargin('t', 30),
+    mt35: getMargin('t', 35),
+    mt40: getMargin('t', 40),
+    mt45: getMargin('t', 45),
+    mt50: getMargin('t', 50),
+
+    mr0: getMargin('r', 0),
+    mr5: getMargin('r', 5),
+    mr10: getMargin('r', 10),
+    mr15: getMargin('r', 15),
+    mr20: getMargin('r', 20),
+    mr25: getMargin('r', 25),
+    mr30: getMargin('r', 30),
+    mr35: getMargin('r', 35),
+    mr40: getMargin('r', 40),
+    mr45: getMargin('r', 45),
+    mr50: getMargin('r', 50),
+
+    mb0: getMargin('b', 0),
+    mb5: getMargin('b', 5),
+    mb10: getMargin('b', 10),
+    mb15: getMargin('b', 15),
+    mb20: getMargin('b', 20),
+    mb25: getMargin('b', 25),
+    mb30: getMargin('b', 30),
+    mb35: getMargin('b', 35),
+    mb40: getMargin('b', 40),
+    mb45: getMargin('b', 45),
+    mb50: getMargin('b', 50),
+
+    ml0: getMargin('l', 0),
+    ml5: getMargin('l', 5),
+    ml10: getMargin('l', 10),
+    ml15: getMargin('l', 15),
+    ml20: getMargin('l', 20),
+    ml25: getMargin('l', 25),
+    ml30: getMargin('l', 30),
+    ml35: getMargin('l', 35),
+    ml40: getMargin('l', 40),
+    ml45: getMargin('l', 45),
+    ml50: getMargin('l', 50),
+
+    mx0: getMargin('x', 0),
+    mx5: getMargin('x', 5),
+    mx10: getMargin('x', 10),
+    mx15: getMargin('x', 15),
+    mx20: getMargin('x', 20),
+    mx25: getMargin('x', 25),
+    mx30: getMargin('x', 30),
+    mx35: getMargin('x', 35),
+    mx40: getMargin('x', 40),
+    mx45: getMargin('x', 45),
+    mx50: getMargin('x', 50),
+
+    my0: getMargin('y', 0),
+    my5: getMargin('y', 5),
+    my10: getMargin('y', 10),
+    my15: getMargin('y', 15),
+    my20: getMargin('y', 20),
+    my25: getMargin('y', 25),
+    my30: getMargin('y', 30),
+    my35: getMargin('y', 35),
+    my40: getMargin('y', 40),
+    my45: getMargin('y', 45),
+    my50: getMargin('y', 50)
+  }
+  for(let i = 5; i <= 50; i++) {
+    styles["f"+i] = {
+      fontSize: i
+    }
+  }
   return {
     info: {
       title: filename || 'Document'
@@ -840,194 +1033,7 @@ pdf.generateDocDefinition = function (content, filename, orientation, pageSize) 
     pageSize: pageSize || 'A4',
     content: resolveContent(content),
     pageMargins: [20, 20, 20, 20],
-    styles: {
-      header: {
-        fontSize: 16,
-        bold: true,
-        margin: [0, 0, 0, 0]
-      },
-      subHeader: {
-        fontSize: 12,
-        bold: false,
-        margin: [0, 5, 0, 5]
-      },
-      table: {
-        fontSize: 8,
-        margin: [5, 0, 5, 5]
-      },
-      tableHeader: {
-        bold: true,
-        fontSize: 9,
-        color: '#000000',
-        fillColor: '#ebebeb',
-        margin: [3, 2, 3, 2]
-      },
-      tableSubHeader: {
-        fontSize: 9,
-        color: '#000000',
-        fillColor: '#ebebeb',
-        margin: [3, 2, 3, 2]
-      },
-      tableBody: {
-        fontSize: 9,
-        margin: [3, 2, 3, 2]
-      },
-      footer: {
-        margin: [20, 20, 20, 20],
-        fontSize: 8,
-        alignment: 'right'
-      },
-      container: {
-        fontSize: 9,
-        margin: [0, 5, 0, 10]
-      },
-      formGroup: {
-        fontSize: 9,
-        margin: [0, 3, 0, 3]
-      },
-      value: {
-        bold: true
-      },
-      h1: {
-        fontSize: 32
-      },
-      h2: {
-        fontSize: 24
-      },
-      h3: {
-        fontSize: 19
-      },
-      h4: {
-        fontSize: 16
-      },
-      h5: {
-        fontSize: 14
-      },
-      h6: {
-        fontSize: 13
-      },
-      p: {
-        fontSize: 9,
-        margin: [0, 4, 0, 0]
-      },
-      span: {
-        fontSize: 9
-      },
-      small: {
-        fontSize: 7
-      },
-      helper: {
-        fontSize: 8,
-        color: '#666666'
-      },
-      bold: {
-        bold: true
-      },
-      left: {
-        alignment: 'left'
-      },
-      right: {
-        alignment: 'right'
-      },
-      success: {
-        color: '#5DAF50'
-      },
-      error: {
-        color: '#F44A36'
-      },
-      colBreak: {
-        margin: [0, 0, 0, 5]
-      },
-      checkbox: {
-        margin: [0, 2, 3, 0]
-      },
-      checkboxLabel: {
-        margin: [0, 2, 0, 0]
-      },
-      ma0: getMargin('a', 0),
-      ma5: getMargin('a', 5),
-      ma10: getMargin('a', 10),
-      ma15: getMargin('a', 15),
-      ma20: getMargin('a', 20),
-      ma25: getMargin('a', 25),
-      ma30: getMargin('a', 30),
-      ma35: getMargin('a', 35),
-      ma40: getMargin('a', 40),
-      ma45: getMargin('a', 45),
-      ma50: getMargin('a', 50),
-
-      mt0: getMargin('t', 0),
-      mt5: getMargin('t', 5),
-      mt10: getMargin('t', 10),
-      mt15: getMargin('t', 15),
-      mt20: getMargin('t', 20),
-      mt25: getMargin('t', 25),
-      mt30: getMargin('t', 30),
-      mt35: getMargin('t', 35),
-      mt40: getMargin('t', 40),
-      mt45: getMargin('t', 45),
-      mt50: getMargin('t', 50),
-
-      mr0: getMargin('r', 0),
-      mr5: getMargin('r', 5),
-      mr10: getMargin('r', 10),
-      mr15: getMargin('r', 15),
-      mr20: getMargin('r', 20),
-      mr25: getMargin('r', 25),
-      mr30: getMargin('r', 30),
-      mr35: getMargin('r', 35),
-      mr40: getMargin('r', 40),
-      mr45: getMargin('r', 45),
-      mr50: getMargin('r', 50),
-
-      mb0: getMargin('b', 0),
-      mb5: getMargin('b', 5),
-      mb10: getMargin('b', 10),
-      mb15: getMargin('b', 15),
-      mb20: getMargin('b', 20),
-      mb25: getMargin('b', 25),
-      mb30: getMargin('b', 30),
-      mb35: getMargin('b', 35),
-      mb40: getMargin('b', 40),
-      mb45: getMargin('b', 45),
-      mb50: getMargin('b', 50),
-
-      ml0: getMargin('l', 0),
-      ml5: getMargin('l', 5),
-      ml10: getMargin('l', 10),
-      ml15: getMargin('l', 15),
-      ml20: getMargin('l', 20),
-      ml25: getMargin('l', 25),
-      ml30: getMargin('l', 30),
-      ml35: getMargin('l', 35),
-      ml40: getMargin('l', 40),
-      ml45: getMargin('l', 45),
-      ml50: getMargin('l', 50),
-
-      mx0: getMargin('x', 0),
-      mx5: getMargin('x', 5),
-      mx10: getMargin('x', 10),
-      mx15: getMargin('x', 15),
-      mx20: getMargin('x', 20),
-      mx25: getMargin('x', 25),
-      mx30: getMargin('x', 30),
-      mx35: getMargin('x', 35),
-      mx40: getMargin('x', 40),
-      mx45: getMargin('x', 45),
-      mx50: getMargin('x', 50),
-
-      my0: getMargin('y', 0),
-      my5: getMargin('y', 5),
-      my10: getMargin('y', 10),
-      my15: getMargin('y', 15),
-      my20: getMargin('y', 20),
-      my25: getMargin('y', 25),
-      my30: getMargin('y', 30),
-      my35: getMargin('y', 35),
-      my40: getMargin('y', 40),
-      my45: getMargin('y', 45),
-      my50: getMargin('y', 50)
-    },
+    styles: styles,
     defaultStyle: {
       columnGap: 5
     },
