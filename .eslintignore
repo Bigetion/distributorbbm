@@ -1,3 +1,5 @@
 build/*.js
 config/*.js
 static/*.js
+src/utils/exportDownload/*.js
+src/utils/maps/*.js
